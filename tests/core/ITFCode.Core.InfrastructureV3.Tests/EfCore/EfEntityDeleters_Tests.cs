@@ -2,6 +2,7 @@
 using ITFCode.Core.Common.Tests.TestKit;
 using ITFCode.Core.InfrastructureV3.EfCore;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq.Expressions;
 
 namespace ITFCode.Core.InfrastructureV3.Tests.EfCore
@@ -403,7 +404,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.EfCore
 
         #endregion
 
-        #region Tests: DeleteRange<TEntity>(IEnumerable<TEntity> entities, bool shouldSave = false)
+        #region Tests: DeleteRange<TEntity>(IEnumerable<object> keys, bool shouldSave = false)
 
         [Theory]
         [InlineData(false)]
@@ -450,23 +451,264 @@ namespace ITFCode.Core.InfrastructureV3.Tests.EfCore
 
         #endregion
 
-        #region Tests: DeleteRangeAsync<TEntity>(IEnumerable<TEntity> entities, bool shouldSave = false, CancellationToken cancellationToken = default)
-
-        #endregion
-
-        #region Tests: DeleteRange<TEntity>(IEnumerable<object> keys, bool shouldSave = false)
-
-        #endregion
-
         #region Tests: DeleteRangeAsync<TEntity>(IEnumerable<object> keys, bool shouldSave = false, CancellationToken cancellationToken = default)
 
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public async Task DeleteRangeAsyncSingeKey_If_Param_ShouldSave_Is_False_Then_Not_Saved(bool shouldSave)
+        {
+            var userAdmin = DefaultData.UserAdmin;
+            var userManager = DefaultData.UserManager;
+            var userModerator = DefaultData.UserModerator;
+            AddEnities(userAdmin, userManager, userModerator);
+
+            Expression<Func<UserTc, bool>> predicate1 = x => x.Id == userAdmin.Id;
+            Expression<Func<UserTc, bool>> predicate2 = x => x.Id == userManager.Id;
+
+            var entityBefore1 = await UserSet.AsNoTracking().FirstOrDefaultAsync(predicate1);
+            var entityBefore2 = await UserSet.AsNoTracking().FirstOrDefaultAsync(predicate2);
+            Assert.NotNull(entityBefore1);
+            Assert.NotNull(entityBefore2);
+
+            var deleter = new EfEntityDeleter<TestDbContext>(_dbContext);
+
+            await deleter.DeleteRangeAsync<UserTc>([entityBefore1.Key, entityBefore2.Key], shouldSave);
+
+            var state1 = _dbContext.Entry(entityBefore1).State;
+            var state2 = _dbContext.Entry(entityBefore2).State;
+
+            var entityAfter1 = await UserSet.AsNoTracking().SingleOrDefaultAsync(predicate1);
+            var entityAfter2 = await UserSet.AsNoTracking().SingleOrDefaultAsync(predicate2);
+
+            Assert.Equal(EntityState.Detached, state1);
+            Assert.Equal(EntityState.Detached, state2);
+
+            if (shouldSave)
+            {
+                Assert.Null(entityAfter1);
+                Assert.Null(entityAfter2);
+            }
+            else
+            {
+                Assert.NotNull(entityAfter1);
+                Assert.NotNull(entityAfter2);
+            }
+        }
+
         #endregion
 
-        #region Tests: DeleteRange<TEntity>(IEnumerable<(object, object)> keys, bool shouldSave = false)
+        #region Tests: DeleteRange<TEntity>(IEnumerable<(object,object)> keys, bool shouldSave = false)
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void DeleteRangeCompositeKey2_If_Param_ShouldSave_Is_False_Then_Not_Saved(bool shouldSave)
+        {
+            var productA = DefaultData.ProductA;
+            var productB = DefaultData.ProductB;
+            var productC = DefaultData.ProductC;
+            AddEnities(productA, productB, productC);
+
+            Expression<Func<ProductTc, bool>> predicate1 = x => x.Id == productA.Id;
+            Expression<Func<ProductTc, bool>> predicate2 = x => x.Id == productB.Id;
+
+            var entityBefore1 = ProductSet.AsNoTracking().SingleOrDefault(predicate1);
+            var entityBefore2 = ProductSet.AsNoTracking().SingleOrDefault(predicate2);
+
+            Assert.NotNull(entityBefore1);
+            Assert.NotNull(entityBefore2);
+
+            var deleter = new EfEntityDeleter<TestDbContext>(_dbContext);
+
+            IEnumerable<(object, object)> keys = [
+                (entityBefore1.Key1, entityBefore1.Key2),
+                (entityBefore2.Key1, entityBefore2.Key2)];
+
+            deleter.DeleteRange<ProductTc>(keys, shouldSave);
+
+            var state1 = _dbContext.Entry(entityBefore1).State;
+            var state2 = _dbContext.Entry(entityBefore2).State;
+
+            var entityAfter1 = ProductSet.AsNoTracking().SingleOrDefault(predicate1);
+            var entityAfter2 = ProductSet.AsNoTracking().SingleOrDefault(predicate2);
+
+            Assert.Equal(EntityState.Detached, state1);
+            Assert.Equal(EntityState.Detached, state2);
+
+            if (shouldSave)
+            {
+                Assert.Null(entityAfter1);
+                Assert.Null(entityAfter2);
+            }
+            else
+            {
+                Assert.NotNull(entityAfter1);
+                Assert.NotNull(entityAfter2);
+            }
+        }
 
         #endregion
 
-        #region Tests: DeleteRangeAsync<TEntity>(IEnumerable<(object, object)> keys, bool shouldSave = false, CancellationToken cancellationToken = default) 
+        #region Tests: DeleteRangeAsync<TEntity>(IEnumerable<(object,object)> keys, bool shouldSave = false, CancellationToken cancellationToken = default)
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public async Task DeleteRangeAsyncCompositeKey2_If_Param_ShouldSave_Is_False_Then_Not_Saved(bool shouldSave)
+        {
+            var productA = DefaultData.ProductA;
+            var productB = DefaultData.ProductB;
+            var productC = DefaultData.ProductC;
+            AddEnities(productA, productB, productC);
+
+            Expression<Func<ProductTc, bool>> predicate1 = x => x.Id == productA.Id;
+            Expression<Func<ProductTc, bool>> predicate2 = x => x.Id == productB.Id;
+
+            var entityBefore1 = await ProductSet.AsNoTracking().SingleOrDefaultAsync(predicate1);
+            var entityBefore2 = await ProductSet.AsNoTracking().SingleOrDefaultAsync(predicate2);
+
+            Assert.NotNull(entityBefore1);
+            Assert.NotNull(entityBefore2);
+
+            var deleter = new EfEntityDeleter<TestDbContext>(_dbContext);
+
+            IEnumerable<(object, object)> keys = [
+                (entityBefore1.Key1, entityBefore1.Key2),
+                (entityBefore2.Key1, entityBefore2.Key2)];
+
+            await deleter.DeleteRangeAsync<ProductTc>(keys, shouldSave);
+
+            var state1 = _dbContext.Entry(entityBefore1).State;
+            var state2 = _dbContext.Entry(entityBefore2).State;
+
+            var entityAfter1 = await ProductSet.AsNoTracking().SingleOrDefaultAsync(predicate1);
+            var entityAfter2 = await ProductSet.AsNoTracking().SingleOrDefaultAsync(predicate2);
+
+            Assert.Equal(EntityState.Detached, state1);
+            Assert.Equal(EntityState.Detached, state2);
+
+            if (shouldSave)
+            {
+                Assert.Null(entityAfter1);
+                Assert.Null(entityAfter2);
+            }
+            else
+            {
+                Assert.NotNull(entityAfter1);
+                Assert.NotNull(entityAfter2);
+            }
+        }
+
+        #endregion
+
+        #region Tests: DeleteRange<TEntity>(IEnumerable<(object, object, object)> keys, bool shouldSave = false)
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void DeleteRangeCompositeKey3_If_Param_ShouldSave_Is_False_Then_Not_Saved(bool shouldSave)
+        {
+            var productOrderA = EntityGenerator.CreateProductOrder(Guid.NewGuid(), "1", 1);
+            var productOrderB = EntityGenerator.CreateProductOrder(Guid.NewGuid(), "2", 2);
+            var productOrderC = EntityGenerator.CreateProductOrder(Guid.NewGuid(), "3", 3);
+            AddEnities(productOrderA, productOrderB, productOrderC);
+
+            Expression<Func<ProductOrderTc, bool>> predicate1 = p => p.CompanyId == productOrderA.Key1
+                && p.LocationId == productOrderA.Key2 && p.UserId == productOrderA.Key3;
+            Expression<Func<ProductOrderTc, bool>> predicate2 = p => p.CompanyId == productOrderB.Key1
+                && p.LocationId == productOrderB.Key2 && p.UserId == productOrderB.Key3;
+
+            var entityBefore1 = ProductOrderSet.AsNoTracking().SingleOrDefault(predicate1);
+            var entityBefore2 = ProductOrderSet.AsNoTracking().SingleOrDefault(predicate2);
+
+            Assert.NotNull(entityBefore1);
+            Assert.NotNull(entityBefore2);
+
+            var deleter = new EfEntityDeleter<TestDbContext>(_dbContext);
+
+            IEnumerable<(object, object, object)> keys = [
+                (entityBefore1.Key1, entityBefore1.Key2, entityBefore1.Key3),
+                (entityBefore2.Key1, entityBefore2.Key2, entityBefore2.Key3),
+            ];
+
+            deleter.DeleteRange<ProductOrderTc>(keys, shouldSave);
+
+            var state1 = _dbContext.Entry(entityBefore1).State;
+            var state2 = _dbContext.Entry(entityBefore2).State;
+
+            var entityAfter1 = ProductOrderSet.AsNoTracking().SingleOrDefault(predicate1);
+            var entityAfter2 = ProductOrderSet.AsNoTracking().SingleOrDefault(predicate2);
+
+            Assert.Equal(EntityState.Detached, state1);
+            Assert.Equal(EntityState.Detached, state2);
+
+            if (shouldSave)
+            {
+                Assert.Null(entityAfter1);
+                Assert.Null(entityAfter2);
+            }
+            else
+            {
+                Assert.NotNull(entityAfter1);
+                Assert.NotNull(entityAfter2);
+            }
+        }
+
+        #endregion
+
+        #region Tests: DeleteRangeAsync<TEntity>(IEnumerable<(object, object, object)> keys, bool shouldSave = false, CancellationToken cancellationToken = default) 
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public async Task DeleteRangeAsyncCompositeKey3_If_Param_ShouldSave_Is_False_Then_Not_Saved(bool shouldSave)
+        {
+            var productOrderA = EntityGenerator.CreateProductOrder(Guid.NewGuid(), "1", 1);
+            var productOrderB = EntityGenerator.CreateProductOrder(Guid.NewGuid(), "2", 2);
+            var productOrderC = EntityGenerator.CreateProductOrder(Guid.NewGuid(), "3", 3);
+            AddEnities(productOrderA, productOrderB, productOrderC);
+
+            Expression<Func<ProductOrderTc, bool>> predicate1 = p => p.CompanyId == productOrderA.Key1
+                && p.LocationId == productOrderA.Key2 && p.UserId == productOrderA.Key3;
+            Expression<Func<ProductOrderTc, bool>> predicate2 = p => p.CompanyId == productOrderB.Key1
+                && p.LocationId == productOrderB.Key2 && p.UserId == productOrderB.Key3;
+
+            var entityBefore1 = await ProductOrderSet.AsNoTracking().SingleOrDefaultAsync(predicate1);
+            var entityBefore2 = await ProductOrderSet.AsNoTracking().SingleOrDefaultAsync(predicate2);
+
+            Assert.NotNull(entityBefore1);
+            Assert.NotNull(entityBefore2);
+
+            var deleter = new EfEntityDeleter<TestDbContext>(_dbContext);
+
+            IEnumerable<(object, object, object)> keys = [
+                (entityBefore1.Key1, entityBefore1.Key2, entityBefore1.Key3),
+                (entityBefore2.Key1, entityBefore2.Key2, entityBefore2.Key3),
+            ];
+
+            await deleter.DeleteRangeAsync<ProductOrderTc>(keys, shouldSave);
+
+            var state1 = _dbContext.Entry(entityBefore1).State;
+            var state2 = _dbContext.Entry(entityBefore2).State;
+
+            var entityAfter1 = await ProductOrderSet.AsNoTracking().SingleOrDefaultAsync(predicate1);
+            var entityAfter2 = await ProductOrderSet.AsNoTracking().SingleOrDefaultAsync(predicate2);
+
+            Assert.Equal(EntityState.Detached, state1);
+            Assert.Equal(EntityState.Detached, state2);
+
+            if (shouldSave)
+            {
+                Assert.Null(entityAfter1);
+                Assert.Null(entityAfter2);
+            }
+            else
+            {
+                Assert.NotNull(entityAfter1);
+                Assert.NotNull(entityAfter2);
+            }
+        }
 
         #endregion
     }

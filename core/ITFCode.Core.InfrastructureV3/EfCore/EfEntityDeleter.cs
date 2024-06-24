@@ -124,20 +124,32 @@ namespace ITFCode.Core.InfrastructureV3.EfCore
 
         public void DeleteRange<TEntity>(IEnumerable<(object, object)> keys, bool shouldSave = false) where TEntity : class
         {
+            DeleteRange(
+                predicate: ExpressionHelper.BuildPredicate<TEntity>(keys, GetKeyPropertyNames<TEntity>()),
+                shouldSave: shouldSave);
         }
 
         public async Task DeleteRangeAsync<TEntity>(IEnumerable<(object, object)> keys, bool shouldSave = false, CancellationToken cancellationToken = default) where TEntity : class
         {
-            throw new NotImplementedException();
+            await DeleteRangeAsync(
+                predicate: ExpressionHelper.BuildPredicate<TEntity>(keys, GetKeyPropertyNames<TEntity>()),
+                shouldSave: shouldSave,
+                cancellationToken: cancellationToken);
         }
 
         public void DeleteRange<TEntity>(IEnumerable<(object, object, object)> keys, bool shouldSave = false) where TEntity : class
         {
+            DeleteRange(
+                predicate: ExpressionHelper.BuildPredicate<TEntity>(keys, GetKeyPropertyNames<TEntity>()),
+                shouldSave: shouldSave);
         }
 
         public async Task DeleteRangeAsync<TEntity>(IEnumerable<(object, object, object)> keys, bool shouldSave = false, CancellationToken cancellationToken = default) where TEntity : class
         {
-            throw new NotImplementedException();
+            await DeleteRangeAsync(
+                predicate: ExpressionHelper.BuildPredicate<TEntity>(keys, GetKeyPropertyNames<TEntity>()),
+                shouldSave: shouldSave,
+                cancellationToken: cancellationToken);
         }
 
         #endregion
