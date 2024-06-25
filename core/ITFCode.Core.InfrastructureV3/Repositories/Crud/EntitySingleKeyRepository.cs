@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
 {
     public abstract class EntityRepository<TDbContext, TEntity, TKey> : EntityRepository<TDbContext, TEntity>,
-            IEntityRerository<TEntity, TKey>
+            IEntityRepository<TEntity, TKey>
             where TEntity : class, IEntity<TKey>
             where TKey : IEquatable<TKey>
             where TDbContext : DbContext
@@ -18,62 +18,62 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
 
         #region IEntityRerository Implementation
 
-        public void Delete(TKey key, bool shouldSave = false)
+        public virtual TEntity? Get(TKey key)
         {
             throw new NotImplementedException();
         }
 
-        public Task DeleteAsync(TKey key, bool shouldSave = false, CancellationToken cancellationToken = default)
+        public virtual Task<TEntity?> GetAsync(TKey key, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public void DeleteRange(IEnumerable<TKey> keys, bool shouldSave = false)
+        public virtual IReadOnlyCollection<TEntity> GetMany(IEnumerable<TKey> keys)
         {
             throw new NotImplementedException();
         }
 
-        public Task DeleteRangeAsync(IEnumerable<TKey> keys, bool shouldSave = false, CancellationToken cancellationToken = default)
+        public virtual Task<IReadOnlyCollection<TEntity>> GetManyAsync(IEnumerable<TKey> keys, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public TEntity? Get(TKey key, bool asNoTracking = true)
+        public virtual TEntity Update(TKey key, Action<TEntity> updater)
         {
             throw new NotImplementedException();
         }
 
-        public Task<TEntity?> GetAsync(TKey key, bool asNoTracking = true, CancellationToken cancellationToken = default)
+        public virtual Task<TEntity> UpdateAsync(TKey key, Action<TEntity> updater, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public IReadOnlyCollection<TEntity> GetMany(IEnumerable<TKey> keys, bool asNoTracking = true)
+        public virtual void UpdateRange(IEnumerable<TKey> keys, Action<TEntity> updater)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IReadOnlyCollection<TEntity>> GetManyAsync(IEnumerable<TKey> keys, bool asNoTracking = true, CancellationToken cancellationToken = default)
+        public virtual Task UpdateRangeAsync(IEnumerable<TKey> keys, Action<TEntity> updater, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public TEntity Update(TKey key, Action<TEntity> updater, bool shouldSave = false)
+        public virtual void Delete(TKey key)
         {
             throw new NotImplementedException();
         }
 
-        public Task<TEntity> UpdateAsync(TKey key, Action<TEntity> updater, bool shouldSave = false, CancellationToken cancellationToken = default)
+        public virtual Task DeleteAsync(TKey key, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public void UpdateRange(IEnumerable<TKey> keys, Action<TEntity> updater, bool shouldSave = false)
+        public virtual void DeleteRange(IEnumerable<TKey> keys)
         {
             throw new NotImplementedException();
         }
 
-        public Task UpdateRangeAsync(IEnumerable<TKey> keys, Action<TEntity> updater, bool shouldSave = false, CancellationToken cancellationToken = default)
+        public virtual Task DeleteRangeAsync(IEnumerable<TKey> keys, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

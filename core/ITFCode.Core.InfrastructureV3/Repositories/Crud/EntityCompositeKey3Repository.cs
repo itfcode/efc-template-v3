@@ -20,62 +20,62 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
 
         #region IEntityRerository Implementation
 
-        public void Delete((TKey1, TKey2, TKey3) key, bool shouldSave = false)
+        public virtual TEntity? Get((TKey1, TKey2, TKey3) key)
         {
             throw new NotImplementedException();
         }
 
-        public async Task DeleteAsync((TKey1, TKey2, TKey3) key, bool shouldSave = false, CancellationToken cancellationToken = default)
-        {
-            await DbDeleter.DeleteAsync<TEntity>((key.Item1, key.Item2, key.Item3), shouldSave, cancellationToken);
-        }
-
-        public void DeleteRange(IEnumerable<(TKey1, TKey2, TKey3)> keys, bool shouldSave = false)
+        public virtual async Task<TEntity?> GetAsync((TKey1, TKey2, TKey3) key, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task DeleteRangeAsync(IEnumerable<(TKey1, TKey2, TKey3)> keys, bool shouldSave = false, CancellationToken cancellationToken = default)
+        public virtual IReadOnlyCollection<TEntity> GetMany(IEnumerable<(TKey1, TKey2, TKey3)> keys)
         {
             throw new NotImplementedException();
         }
 
-        public TEntity? Get((TKey1, TKey2, TKey3) key, bool asNoTracking = true)
+        public virtual async Task<IReadOnlyCollection<TEntity>> GetManyAsync(IEnumerable<(TKey1, TKey2, TKey3)> keys, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<TEntity?> GetAsync((TKey1, TKey2, TKey3) key, bool asNoTracking = true, CancellationToken cancellationToken = default)
+        public virtual TEntity Update((TKey1, TKey2, TKey3) key, Action<TEntity> updater)
         {
             throw new NotImplementedException();
         }
 
-        public IReadOnlyCollection<TEntity> GetMany(IEnumerable<(TKey1, TKey2, TKey3)> keys, bool asNoTracking = true)
+        public virtual async Task<TEntity> UpdateAsync((TKey1, TKey2, TKey3) key, Action<TEntity> updater, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IReadOnlyCollection<TEntity>> GetManyAsync(IEnumerable<(TKey1, TKey2, TKey3)> keys, bool asNoTracking = true, CancellationToken cancellationToken = default)
+        public virtual void UpdateRange(IEnumerable<(TKey1, TKey2, TKey3)> keys, Action<TEntity> updater)
         {
             throw new NotImplementedException();
         }
 
-        public TEntity Update((TKey1, TKey2, TKey3) key, Action<TEntity> updater, bool shouldSave = false)
+        public virtual async Task UpdateRangeAsync(IEnumerable<(TKey1, TKey2, TKey3)> keys, Action<TEntity> updater, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<TEntity> UpdateAsync((TKey1, TKey2, TKey3) key, Action<TEntity> updater, bool shouldSave = false, CancellationToken cancellationToken = default)
+        public virtual void Delete((TKey1, TKey2, TKey3) key)
         {
             throw new NotImplementedException();
         }
 
-        public void UpdateRange(IEnumerable<(TKey1, TKey2, TKey3)> keys, Action<TEntity> updater, bool shouldSave = false)
+        public virtual async Task DeleteAsync((TKey1, TKey2, TKey3) key, CancellationToken cancellationToken = default)
+        {
+            await DbDeleter.DeleteAsync<TEntity>((key.Item1, key.Item2, key.Item3), shouldSave: false, cancellationToken);
+        }
+
+        public virtual void DeleteRange(IEnumerable<(TKey1, TKey2, TKey3)> keys)
         {
             throw new NotImplementedException();
         }
 
-        public Task UpdateRangeAsync(IEnumerable<(TKey1, TKey2, TKey3)> keys, Action<TEntity> updater, bool shouldSave = false, CancellationToken cancellationToken = default)
+        public virtual async Task DeleteRangeAsync(IEnumerable<(TKey1, TKey2, TKey3)> keys, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

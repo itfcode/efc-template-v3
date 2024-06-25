@@ -35,11 +35,11 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
 
         #region IEntityRerository Implementation
 
-        public virtual TEntity Insert(TEntity entity, bool shouldSave = false)
+        public virtual TEntity Insert(TEntity entity)
         {
             try
             {
-                return DbCreater.Insert(entity, shouldSave);
+                return DbCreater.Insert(entity, shouldSave: false);
             }
             catch (Exception)
             {
@@ -47,11 +47,11 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
             }
         }
 
-        public virtual async Task<TEntity> InsertAsync(TEntity entity, bool shouldSave = false, CancellationToken cancellationToken = default)
+        public virtual async Task<TEntity> InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             try
             {
-                return await DbCreater.InsertAsync(entity, shouldSave, cancellationToken);
+                return await DbCreater.InsertAsync(entity, shouldSave: false, cancellationToken);
             }
             catch (Exception)
             {
@@ -59,11 +59,11 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
             }
         }
 
-        public virtual void InsertRange(IEnumerable<TEntity> entities, bool shouldSave = false)
+        public virtual void InsertRange(IEnumerable<TEntity> entities)
         {
             try
             {
-                DbCreater.InsertRange(entities, shouldSave);
+                DbCreater.InsertRange(entities, shouldSave: false);
             }
             catch (Exception)
             {
@@ -71,11 +71,11 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
             }
         }
 
-        public virtual async Task InsertRangeAsync(IEnumerable<TEntity> entities, bool shouldSave = false, CancellationToken cancellationToken = default)
+        public virtual async Task InsertRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
         {
             try
             {
-                await DbCreater.InsertRangeAsync(entities, shouldSave, cancellationToken);
+                await DbCreater.InsertRangeAsync(entities, shouldSave: false, cancellationToken);
             }
             catch (Exception)
             {
@@ -83,11 +83,11 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
             }
         }
 
-        public virtual TEntity Update(TEntity entity, bool shouldSave = false)
+        public virtual TEntity Update(TEntity entity)
         {
             try
             {
-                return DbUpdater.Update(entity, shouldSave);
+                return DbUpdater.Update(entity, shouldSave: false);
             }
             catch (Exception)
             {
@@ -95,11 +95,11 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
             }
         }
 
-        public virtual async Task<TEntity> UpdateAsync(TEntity entity, bool shouldSave = false, CancellationToken cancellationToken = default)
+        public virtual async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             try
             {
-                return await DbUpdater.UpdateAsync(entity, shouldSave,cancellationToken);
+                return await DbUpdater.UpdateAsync(entity, shouldSave: false, cancellationToken);
             }
             catch (Exception)
             {
@@ -107,20 +107,7 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
             }
         }
 
-        public virtual async void UpdateRange(IEnumerable<TEntity> entities, bool shouldSave = false)
-        {
-            try
-            {
-
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        public virtual async Task UpdateRangeAsync(IEnumerable<TEntity> entities, bool shouldSave = false, CancellationToken cancellationToken = default)
+        public virtual async void UpdateRange(IEnumerable<TEntity> entities)
         {
             try
             {
@@ -133,7 +120,7 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
             }
         }
 
-        public virtual void Delete(TEntity entity, bool shouldSave = false)
+        public virtual async Task UpdateRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -146,7 +133,7 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
             }
         }
 
-        public virtual async Task DeleteAsync(TEntity entity, bool shouldSave = false, CancellationToken cancellationToken = default)
+        public virtual void Delete(TEntity entity)
         {
             try
             {
@@ -159,7 +146,7 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
             }
         }
 
-        public virtual void DeleteRange(IEnumerable<TEntity> entities, bool shouldSave = false)
+        public virtual async Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -172,7 +159,20 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
             }
         }
 
-        public virtual async Task DeleteRangeAsync(IEnumerable<TEntity> entities, bool shouldSave = false, CancellationToken cancellationToken = default)
+        public virtual void DeleteRange(IEnumerable<TEntity> entities)
+        {
+            try
+            {
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public virtual async Task DeleteRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -183,6 +183,10 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
                 throw;
             }
         }
+
+        public virtual int Commit() => DbContext.SaveChanges();
+
+        public virtual async Task<int> CommitAsync(CancellationToken cancellationToken = default) => await DbContext.SaveChangesAsync(cancellationToken);
 
         #endregion
     }

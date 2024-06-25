@@ -8,10 +8,10 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Readonly.Interfaces
         where TKey2 : IEquatable<TKey2>
         where TKey3 : IEquatable<TKey3>
     {
-        TEntity? Get((TKey1, TKey2, TKey3) key, bool asNoTracking = true);
-        Task<TEntity?> GetAsync((TKey1, TKey2, TKey3) key, bool asNoTracking = true, CancellationToken cancellationToken = default);
+        TEntity? Get((TKey1, TKey2, TKey3) key);
+        Task<TEntity?> GetAsync((TKey1, TKey2, TKey3) key, CancellationToken cancellationToken = default);
 
-        IReadOnlyCollection<TEntity> GetMany(IEnumerable<(TKey1, TKey2, TKey3)> keys, bool asNoTracking = true);
-        Task<IReadOnlyCollection<TEntity>> GetManyAsync(IEnumerable<(TKey1, TKey2, TKey3)> keys, bool asNoTracking = true, CancellationToken cancellationToken = default);
+        IReadOnlyCollection<TEntity> GetMany(IEnumerable<(TKey1, TKey2, TKey3)> keys);
+        Task<IReadOnlyCollection<TEntity>> GetManyAsync(IEnumerable<(TKey1, TKey2, TKey3)> keys, CancellationToken cancellationToken = default);
     }
 }

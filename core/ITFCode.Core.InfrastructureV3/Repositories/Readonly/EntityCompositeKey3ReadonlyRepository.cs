@@ -21,20 +21,20 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Readonly
 
         #region IEntityReadonlyRepository Implementation
 
-        public virtual TEntity? Get((TKey1, TKey2, TKey3) key, bool asNoTracking = true)
-            => DbReader.Get<TEntity>((key.Item1, key.Item2, key.Item3), asNoTracking);
+        public virtual TEntity? Get((TKey1, TKey2, TKey3) key)
+            => DbReader.Get<TEntity>((key.Item1, key.Item2, key.Item3), asNoTracking: true);
 
-        public virtual async Task<TEntity?> GetAsync((TKey1, TKey2, TKey3) key, bool asNoTracking = true, CancellationToken cancellationToken = default)
-            => await DbReader.GetAsync<TEntity>((key.Item1, key.Item2, key.Item3), asNoTracking, cancellationToken);
+        public virtual async Task<TEntity?> GetAsync((TKey1, TKey2, TKey3) key, CancellationToken cancellationToken = default)
+            => await DbReader.GetAsync<TEntity>((key.Item1, key.Item2, key.Item3), asNoTracking:true, cancellationToken);
 
-        public virtual IReadOnlyCollection<TEntity> GetMany(IEnumerable<(TKey1, TKey2, TKey3)> keys, bool asNoTracking = true)
+        public virtual IReadOnlyCollection<TEntity> GetMany(IEnumerable<(TKey1, TKey2, TKey3)> keys)
         {
-            return DbReader.GetMany<TEntity>(CollectionHelper.ToArraysOfObjects(keys), asNoTracking);
+            return DbReader.GetMany<TEntity>(CollectionHelper.ToArraysOfObjects(keys), asNoTracking: true);
         }
 
-        public virtual async Task<IReadOnlyCollection<TEntity>> GetManyAsync(IEnumerable<(TKey1, TKey2, TKey3)> keys, bool asNoTracking = true, CancellationToken cancellationToken = default)
+        public virtual async Task<IReadOnlyCollection<TEntity>> GetManyAsync(IEnumerable<(TKey1, TKey2, TKey3)> keys, CancellationToken cancellationToken = default)
         {
-            return await DbReader.GetManyAsync<TEntity>(CollectionHelper.ToArraysOfObjects(keys), asNoTracking, cancellationToken);
+            return await DbReader.GetManyAsync<TEntity>(CollectionHelper.ToArraysOfObjects(keys), asNoTracking: true, cancellationToken);
         }
 
         #endregion
