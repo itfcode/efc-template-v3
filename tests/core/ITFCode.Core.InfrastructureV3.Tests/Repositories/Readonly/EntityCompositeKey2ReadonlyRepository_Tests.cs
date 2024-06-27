@@ -13,43 +13,49 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Readonly
         [Fact]
         public override void Get_If_Param_Is_Correct_Then_Ok()
         {
-            var productA = DefaultData.ProductA;
-            var productB = DefaultData.ProductB;
-            AddEnities(productA, productB);
+            AddTestingData();
+
+            var productId = DefaultData.ProductA.Id;
+            var productCountryCode = DefaultData.ProductA.CountryCode;
 
             var repository = CreateRepository();
-            var product = repository.Get((productA.Id, productA.CountryCode));
+            var entity = repository.Get((productId, productCountryCode));
 
-            Assert.NotNull(product);
-            Assert.Equal(productA.Id, product.Key1);
-            Assert.Equal(productA.CountryCode, product.Key2);
-
-            var state = _dbContext.Entry(product).State;
-
-            Assert.Equal(EntityState.Detached, state);
+            Assert.NotNull(entity);
+            Assert.Equal(productId, entity.Key1);
+            Assert.Equal(productCountryCode, entity.Key2);
+            Assert.Equal(EntityState.Detached, _dbContext.Entry(entity).State);
         }
 
         #endregion
-
+       
         #region Tests: GetAsync((TKey1, TKey2) key, CancellationToken cancellationToken = default)
 
         [Fact]
         public override async Task GetAsync_If_Param_Is_Correct_Then_Ok()
         {
-            var productA = DefaultData.ProductA;
-            var productB = DefaultData.ProductB;
-            AddEnities(productA, productB);
+            AddTestingData();
+
+            var productId = DefaultData.ProductA.Id;
+            var productCountryCode = DefaultData.ProductA.CountryCode;
 
             var repository = CreateRepository();
-            var product = await repository.GetAsync((productA.Id, productA.CountryCode));
+            var entity = await repository.GetAsync((productId, productCountryCode));
 
-            Assert.NotNull(product);
-            Assert.Equal(productA.Id, product.Key1);
-            Assert.Equal(productA.CountryCode, product.Key2);
+            Assert.NotNull(entity);
+            Assert.Equal(productId, entity.Key1);
+            Assert.Equal(productCountryCode, entity.Key2);
+            Assert.Equal(EntityState.Detached, _dbContext.Entry(entity).State);
+        }
 
-            var state = _dbContext.Entry(product).State;
+        [Fact]
+        public override async Task GetAsync_Throw_If_Cancellation()
+        {
+            var repository = CreateRepository();
+            var cancellationToken = CreateCancellationToken();
 
-            Assert.Equal(EntityState.Detached, state);
+            await Assert.ThrowsAsync<OperationCanceledException>(
+                () => repository.GetAsync((1, "key_value"), cancellationToken: cancellationToken));
         }
 
         #endregion
@@ -59,7 +65,27 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Readonly
         [Fact]
         public override void GetMany_If_Param_Is_Correct_Then_Ok()
         {
-            throw new NotImplementedException();
+            AddTestingData();
+
+            var productId1 = DefaultData.ProductA.Id;
+            var productId2 = DefaultData.ProductB.Id;
+            var productCountryCode1 = DefaultData.ProductA.CountryCode;
+            var productCountryCode2 = DefaultData.ProductB.CountryCode;
+
+            var repository = CreateRepository();
+            IEnumerable<(long, string)> keys = [(productId1, productCountryCode1), (productId2, productCountryCode2)];
+
+            var entities = repository.GetMany(keys);
+
+            Assert.NotEmpty(entities);
+
+            var entity1 = entities.FirstOrDefault(p => p.Key1 == productId1 && p.Key2 == productCountryCode1);
+            var entity2 = entities.FirstOrDefault(p => p.Key1 == productId2 && p.Key2 == productCountryCode2);
+
+            Assert.NotNull(entity1);
+            Assert.NotNull(entity2);
+            Assert.Equal(EntityState.Detached, _dbContext.Entry(entity1).State);
+            Assert.Equal(EntityState.Detached, _dbContext.Entry(entity2).State);
         }
 
         #endregion
@@ -67,9 +93,41 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Readonly
         #region Tests: GetManyAsync(IEnumerable<(TKey1, TKey2)> keys, CancellationToken cancellationToken = default)
 
         [Fact]
-        public override Task GetManyAsync_If_Param_Is_Correct_Then_Ok()
+        public override async Task GetManyAsync_If_Param_Is_Correct_Then_Ok()
         {
-            throw new NotImplementedException();
+            await AddTestingDataAsync();
+
+            var productId1 = DefaultData.ProductA.Id;
+            var productId2 = DefaultData.ProductB.Id;
+            var productCountryCode1 = DefaultData.ProductA.CountryCode;
+            var productCountryCode2 = DefaultData.ProductB.CountryCode;
+
+            var repository = CreateRepository();
+            IEnumerable<(long, string)> keys = [(productId1, productCountryCode1), (productId2, productCountryCode2)];
+
+            var entities = await repository.GetManyAsync(keys);
+
+            Assert.NotEmpty(entities);
+
+            var entity1 = entities.FirstOrDefault(p => p.Key1 == productId1 && p.Key2 == productCountryCode1);
+            var entity2 = entities.FirstOrDefault(p => p.Key1 == productId2 && p.Key2 == productCountryCode2);
+
+            Assert.NotNull(entity1);
+            Assert.NotNull(entity2);
+            Assert.Equal(EntityState.Detached, _dbContext.Entry(entity1).State);
+            Assert.Equal(EntityState.Detached, _dbContext.Entry(entity2).State);
+        }
+
+        [Fact]
+        public override async Task GetManyAsync_Throw_If_Cancellation()
+        {
+            var repository = CreateRepository();
+            var cancellationToken = CreateCancellationToken();
+            IEnumerable<(long, string)> keys = [(DefaultData.ProductA.Key1, DefaultData.ProductA.Key2)
+                ,(DefaultData.ProductB.Key1, DefaultData.ProductB.Key2)];
+
+            await Assert.ThrowsAsync<OperationCanceledException>(
+                () => repository.GetManyAsync(keys, cancellationToken: cancellationToken));
         }
 
         #endregion

@@ -1,4 +1,5 @@
 ﻿using ITFCode.Core.Domain.Entities.Base.Interfaces;
+using ITFCode.Core.InfrastructureV3.Extensions;
 using ITFCode.Core.InfrastructureV3.Repositories.Crud.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,62 +22,149 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
 
         public virtual TEntity? Get((TKey1, TKey2) key)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return DbReader.Get<TEntity>((key.Item1, key.Item2), asNoTracking: true);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public virtual Task<TEntity?> GetAsync((TKey1, TKey2) key, CancellationToken cancellationToken = default)
+        public virtual async Task<TEntity?> GetAsync((TKey1, TKey2) key, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await DbReader.GetAsync<TEntity>((key.Item1, key.Item2), asNoTracking: true, cancellationToken);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public virtual IReadOnlyCollection<TEntity> GetMany(IEnumerable<(TKey1, TKey2)> keys)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return DbReader.GetMany<TEntity>(keys.ToTuplesOfObjects(), asNoTracking: true);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public virtual Task<IReadOnlyCollection<TEntity>> GetManyAsync(IEnumerable<(TKey1, TKey2)> keys,  CancellationToken cancellationToken = default)
+        public virtual async Task<IReadOnlyCollection<TEntity>> GetManyAsync(IEnumerable<(TKey1, TKey2)> keys, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await DbReader.GetManyAsync<TEntity>(keys.ToTuplesOfObjects(), asNoTracking: true);
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public virtual TEntity Update((TKey1, TKey2) key, Action<TEntity> updater)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return DbUpdater.Update(key, updater, shouldSave: false);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public virtual Task<TEntity> UpdateAsync((TKey1, TKey2) key, Action<TEntity> updater,  CancellationToken cancellationToken = default)
+        public virtual async Task<TEntity> UpdateAsync((TKey1, TKey2) key, Action<TEntity> updater, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await DbUpdater.UpdateAsync(key, updater, shouldSave: false, cancellationToken);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public virtual void UpdateRange(IEnumerable<(TKey1, TKey2)> keys, Action<TEntity> updater)
         {
-            throw new NotImplementedException();
+            try
+            {
+                DbUpdater.UpdateRange(keys.ToTuplesOfObjects(), updater, shouldSave: false);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public virtual Task UpdateRangeAsync(IEnumerable<(TKey1, TKey2)> keys, Action<TEntity> updater, CancellationToken cancellationToken = default)
+        public virtual async Task UpdateRangeAsync(IEnumerable<(TKey1, TKey2)> keys, Action<TEntity> updater, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await DbUpdater.UpdateRangeAsync(keys.ToTuplesOfObjects(), updater, shouldSave: false, cancellationToken);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public virtual void Delete((TKey1, TKey2) key)
         {
-            throw new NotImplementedException();
+            try
+            {
+                DbDeleter.Delete<TEntity>(key, shouldSave: false);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public virtual Task DeleteAsync((TKey1, TKey2) key, CancellationToken cancellationToken = default)
+        public virtual async Task DeleteAsync((TKey1, TKey2) key, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await DbDeleter.DeleteAsync<TEntity>(key, shouldSave: false);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public virtual void DeleteRange(IEnumerable<(TKey1, TKey2)> keys)
         {
-            throw new NotImplementedException();
+            try
+            {
+                DbDeleter.DeleteRange<TEntity>(keys.ToTuplesOfObjects(), shouldSave: false);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
-        public virtual Task DeleteRangeAsync(IEnumerable<(TKey1, TKey2)> keys, CancellationToken cancellationToken = default)
+        public virtual async Task DeleteRangeAsync(IEnumerable<(TKey1, TKey2)> keys, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await DbDeleter.DeleteRangeAsync<TEntity>(keys.ToTuplesOfObjects(), shouldSave: false);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         #endregion

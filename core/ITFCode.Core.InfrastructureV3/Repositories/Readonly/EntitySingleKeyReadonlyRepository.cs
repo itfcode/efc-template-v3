@@ -19,16 +19,52 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Readonly
         #region IEntityReadonlyRepository Implementation
 
         public virtual TEntity? Get(TKey key)
-            => DbReader.Get<TEntity>(key, asNoTracking: true);
+        {
+            try
+            {
+                return DbReader.Get<TEntity>(key, asNoTracking: true);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public virtual async Task<TEntity?> GetAsync(TKey key, CancellationToken cancellationToken = default)
-            => await DbReader.GetAsync<TEntity>(key, asNoTracking: true, cancellationToken);
+        {
+            try
+            {
+                return await DbReader.GetAsync<TEntity>(key, asNoTracking: true, cancellationToken);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public virtual IReadOnlyCollection<TEntity> GetMany(IEnumerable<TKey> keys)
-            => DbReader.GetMany<TEntity>(keys.Cast<object>(), asNoTracking: true);
+        {
+            try
+            {
+                return DbReader.GetMany<TEntity>(keys.Cast<object>(), asNoTracking: true);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public virtual async Task<IReadOnlyCollection<TEntity>> GetManyAsync(IEnumerable<TKey> keys, CancellationToken cancellationToken = default)
-            => await DbReader.GetManyAsync<TEntity>(keys.Cast<object>(), asNoTracking: true, cancellationToken);
+        {
+            try
+            {
+                return await DbReader.GetManyAsync<TEntity>(keys.Cast<object>(), asNoTracking: true, cancellationToken);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         #endregion
     }

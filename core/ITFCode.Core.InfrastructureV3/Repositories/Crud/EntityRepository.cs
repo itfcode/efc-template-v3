@@ -1,4 +1,5 @@
-﻿using ITFCode.Core.Domain.Entities.Base.Interfaces;
+﻿using ITFCode.Core.Domain.Entities.Base;
+using ITFCode.Core.Domain.Entities.Base.Interfaces;
 using ITFCode.Core.InfrastructureV3.EfCore;
 using ITFCode.Core.InfrastructureV3.EfCore.Readers;
 using ITFCode.Core.InfrastructureV3.Repositories.Crud.Interfaces;
@@ -107,15 +108,14 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
             }
         }
 
-        public virtual async void UpdateRange(IEnumerable<TEntity> entities)
+        public virtual void UpdateRange(IEnumerable<TEntity> entities)
         {
             try
             {
-
+                DbUpdater.UpdateRange(entities, shouldSave: false);
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -124,11 +124,10 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
         {
             try
             {
-
+                await DbUpdater.UpdateRangeAsync(entities, shouldSave: false, cancellationToken);
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -137,11 +136,10 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
         {
             try
             {
-
+                DbDeleter.Delete(entity, shouldSave: false);
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -150,11 +148,10 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
         {
             try
             {
-
+                await DbDeleter.DeleteAsync(entity, shouldSave: false, cancellationToken);
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -163,11 +160,10 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
         {
             try
             {
-
+                DbDeleter.DeleteRange(entities, shouldSave: false);
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -176,7 +172,7 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
         {
             try
             {
-
+                await DbDeleter.DeleteRangeAsync(entities, shouldSave: false, cancellationToken);
             }
             catch (Exception)
             {
@@ -184,9 +180,39 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
             }
         }
 
-        public virtual int Commit() => DbContext.SaveChanges();
+        public virtual int Commit()
+        {
+            try
+            {
+                var numberOf = DbContext.SaveChanges();
 
-        public virtual async Task<int> CommitAsync(CancellationToken cancellationToken = default) => await DbContext.SaveChangesAsync(cancellationToken);
+                foreach (var entry in DbContext.ChangeTracker.Entries())
+                    entry.State = EntityState.Detached;
+
+                return numberOf;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public virtual async Task<int> CommitAsync(CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var numberOf = await DbContext.SaveChangesAsync(cancellationToken);
+
+                foreach (var entry in DbContext.ChangeTracker.Entries())
+                    entry.State = EntityState.Detached;
+
+                return numberOf;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         #endregion
     }

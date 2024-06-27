@@ -38,6 +38,8 @@ namespace ITFCode.Core.InfrastructureV3.EfCore
         {
             try
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 DbContext.Entry(entity).State = EntityState.Deleted;
 
                 if (shouldSave)
@@ -93,6 +95,8 @@ namespace ITFCode.Core.InfrastructureV3.EfCore
         {
             try
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 foreach (var entity in entities)
                 {
                     DbContext.Entry(entity).State = EntityState.Deleted;
@@ -109,47 +113,90 @@ namespace ITFCode.Core.InfrastructureV3.EfCore
 
         public void DeleteRange<TEntity>(IEnumerable<object> keys, bool shouldSave = false) where TEntity : class
         {
-            DeleteRange(
-                predicate: ExpressionHelper.BuildPredicate<TEntity>(keys, GetKeyPropertyNames<TEntity>()[0]),
-                shouldSave: shouldSave);
+            try
+            {
+                DeleteRange(
+                    predicate: ExpressionHelper.BuildPredicate<TEntity>(keys, GetKeyPropertyNames<TEntity>()[0]),
+                    shouldSave: shouldSave);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task DeleteRangeAsync<TEntity>(IEnumerable<object> keys, bool shouldSave = false, CancellationToken cancellationToken = default) where TEntity : class
         {
-            await DeleteRangeAsync(
-                predicate: ExpressionHelper.BuildPredicate<TEntity>(keys, GetKeyPropertyNames<TEntity>()[0]),
-                shouldSave: shouldSave,
-                cancellationToken: cancellationToken);
+            try
+            {
+                await DeleteRangeAsync(
+                    predicate: ExpressionHelper.BuildPredicate<TEntity>(keys, GetKeyPropertyNames<TEntity>()[0]),
+                    shouldSave: shouldSave,
+                    cancellationToken: cancellationToken);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public void DeleteRange<TEntity>(IEnumerable<(object, object)> keys, bool shouldSave = false) where TEntity : class
         {
-            DeleteRange(
-                predicate: ExpressionHelper.BuildPredicate<TEntity>(keys, GetKeyPropertyNames<TEntity>()),
-                shouldSave: shouldSave);
+            try
+            {
+                DeleteRange(
+                    predicate: ExpressionHelper.BuildPredicate<TEntity>(keys, GetKeyPropertyNames<TEntity>()),
+                    shouldSave: shouldSave);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task DeleteRangeAsync<TEntity>(IEnumerable<(object, object)> keys, bool shouldSave = false, CancellationToken cancellationToken = default) where TEntity : class
         {
-            await DeleteRangeAsync(
-                predicate: ExpressionHelper.BuildPredicate<TEntity>(keys, GetKeyPropertyNames<TEntity>()),
-                shouldSave: shouldSave,
-                cancellationToken: cancellationToken);
+            try
+            {
+                await DeleteRangeAsync(
+                    predicate: ExpressionHelper.BuildPredicate<TEntity>(keys, GetKeyPropertyNames<TEntity>()),
+                    shouldSave: shouldSave,
+                    cancellationToken: cancellationToken);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public void DeleteRange<TEntity>(IEnumerable<(object, object, object)> keys, bool shouldSave = false) where TEntity : class
         {
-            DeleteRange(
-                predicate: ExpressionHelper.BuildPredicate<TEntity>(keys, GetKeyPropertyNames<TEntity>()),
-                shouldSave: shouldSave);
+            try
+            {
+                DeleteRange(
+                    predicate: ExpressionHelper.BuildPredicate<TEntity>(keys, GetKeyPropertyNames<TEntity>()),
+                    shouldSave: shouldSave);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task DeleteRangeAsync<TEntity>(IEnumerable<(object, object, object)> keys, bool shouldSave = false, CancellationToken cancellationToken = default) where TEntity : class
         {
-            await DeleteRangeAsync(
-                predicate: ExpressionHelper.BuildPredicate<TEntity>(keys, GetKeyPropertyNames<TEntity>()),
-                shouldSave: shouldSave,
-                cancellationToken: cancellationToken);
+            try
+            {
+                await DeleteRangeAsync(
+                    predicate: ExpressionHelper.BuildPredicate<TEntity>(keys, GetKeyPropertyNames<TEntity>()),
+                    shouldSave: shouldSave,
+                    cancellationToken: cancellationToken);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         #endregion
@@ -187,6 +234,8 @@ namespace ITFCode.Core.InfrastructureV3.EfCore
 
             if (key.Length == 0) throw new CollectionIsEmptyException($"Key Is Not Defined.");
 
+            cancellationToken.ThrowIfCancellationRequested();
+
             var entity = await DbContext.Set<TEntity>().FindAsync(key, cancellationToken)
                 ?? throw new NullReferenceException($"Entity Not Found. Type: '{typeof(TEntity).Name}', Key:'{key}' ");
 
@@ -196,6 +245,10 @@ namespace ITFCode.Core.InfrastructureV3.EfCore
 
                 if (shouldSave)
                     await DbContext.SaveChangesAsync();
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -232,6 +285,8 @@ namespace ITFCode.Core.InfrastructureV3.EfCore
         {
             try
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 var entities = await DbContext.Set<TEntity>()
                     .Where(predicate)
                     .ToListAsync(cancellationToken);
@@ -244,6 +299,10 @@ namespace ITFCode.Core.InfrastructureV3.EfCore
 
                 if (shouldSave)
                     await DbContext.SaveChangesAsync(cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception ex)
             {

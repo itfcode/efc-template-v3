@@ -29,6 +29,7 @@ namespace ITFCode.Core.Common.Tests.TestKit
 
         public static ProductOrderTc ProductOrder1 => EntityGenerator.CreateProductOrder(CompanySun.Id, LocationEurope.Id, UserManager.Id);
         public static ProductOrderTc ProductOrder2 => EntityGenerator.CreateProductOrder(CompanyMoon.Id, LocationAfrica.Id, UserGuest.Id);
+        public static ProductOrderTc ProductOrder3 => EntityGenerator.CreateProductOrder(CompanySun.Id, LocationAfrica.Id, UserAdmin.Id);
 
         public static IReadOnlyList<UserTc> Users => [UserAdmin, UserManager, UserUser, UserModerator, UserGuest];
         public static IReadOnlyList<RoleTc> Roles => [RoleAdmin, RoleManager, RoleUser, RoleModerator, RoleGuest];

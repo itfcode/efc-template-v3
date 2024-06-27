@@ -22,19 +22,51 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Readonly
         #region IEntityReadonlyRepository Implementation
 
         public virtual TEntity? Get((TKey1, TKey2, TKey3) key)
-            => DbReader.Get<TEntity>((key.Item1, key.Item2, key.Item3), asNoTracking: true);
+        {
+            try
+            {
+                return DbReader.Get<TEntity>((key.Item1, key.Item2, key.Item3), asNoTracking: true);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public virtual async Task<TEntity?> GetAsync((TKey1, TKey2, TKey3) key, CancellationToken cancellationToken = default)
-            => await DbReader.GetAsync<TEntity>((key.Item1, key.Item2, key.Item3), asNoTracking:true, cancellationToken);
+        {
+            try
+            {
+                return await DbReader.GetAsync<TEntity>((key.Item1, key.Item2, key.Item3), asNoTracking: true, cancellationToken);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }     
 
         public virtual IReadOnlyCollection<TEntity> GetMany(IEnumerable<(TKey1, TKey2, TKey3)> keys)
         {
-            return DbReader.GetMany<TEntity>(CollectionHelper.ToArraysOfObjects(keys), asNoTracking: true);
+            try
+            {
+                return DbReader.GetMany<TEntity>(CollectionHelper.ToArraysOfObjects(keys), asNoTracking: true);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public virtual async Task<IReadOnlyCollection<TEntity>> GetManyAsync(IEnumerable<(TKey1, TKey2, TKey3)> keys, CancellationToken cancellationToken = default)
         {
-            return await DbReader.GetManyAsync<TEntity>(CollectionHelper.ToArraysOfObjects(keys), asNoTracking: true, cancellationToken);
+            try
+            {
+                return await DbReader.GetManyAsync<TEntity>(CollectionHelper.ToArraysOfObjects(keys), asNoTracking: true, cancellationToken);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         #endregion
