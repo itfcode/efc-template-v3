@@ -23,7 +23,6 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
             try
             {
                 return DbReader.Get<TEntity>(key, asNoTracking: true);
-
             }
             catch (Exception)
             {

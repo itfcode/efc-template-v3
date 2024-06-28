@@ -85,7 +85,7 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
         {
             try
             {
-                return await DbUpdater.UpdateAsync(key, updater, shouldSave: false);
+                return await DbUpdater.UpdateAsync(key, updater, shouldSave: false, cancellationToken);
             }
             catch (Exception)
             {

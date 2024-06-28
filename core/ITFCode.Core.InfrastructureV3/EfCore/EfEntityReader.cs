@@ -16,74 +16,152 @@ namespace ITFCode.Core.InfrastructureV3.EfCore.Readers
 
         #region Public Methods: Get Sync & Async 
 
-        public TEntity? Get<TEntity>(object key, bool asNoTracking = true)
-            where TEntity : class
-            => Get<TEntity>([key], asNoTracking);
+        public TEntity? Get<TEntity>(object key, bool asNoTracking = true) where TEntity : class
+        {
+            try
+            {
+                return Get<TEntity>([key], asNoTracking);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
-        public async Task<TEntity?> GetAsync<TEntity>(object key, bool asNoTracking = true, CancellationToken cancellationToken = default)
-            where TEntity : class
-            => await GetAsync<TEntity>([key], asNoTracking, cancellationToken);
+        public async Task<TEntity?> GetAsync<TEntity>(object key, bool asNoTracking = true, CancellationToken cancellationToken = default) where TEntity : class
+        {
+            try
+            {
+                return await GetAsync<TEntity>([key], asNoTracking, cancellationToken);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
-        public TEntity? Get<TEntity>((object, object) key, bool asNoTracking = true)
-            where TEntity : class
-            => Get<TEntity>([key.Item1, key.Item2], asNoTracking);
+        public TEntity? Get<TEntity>((object, object) key, bool asNoTracking = true) where TEntity : class
+        {
+            try
+            {
+                return Get<TEntity>([key.Item1, key.Item2], asNoTracking);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
-        public async Task<TEntity?> GetAsync<TEntity>((object, object) key, bool asNoTracking = true, CancellationToken cancellationToken = default)
-            where TEntity : class
-            => await GetAsync<TEntity>([key.Item1, key.Item2], asNoTracking, cancellationToken);
+        public async Task<TEntity?> GetAsync<TEntity>((object, object) key, bool asNoTracking = true, CancellationToken cancellationToken = default) where TEntity : class
+        {
+            return await GetAsync<TEntity>([key.Item1, key.Item2], asNoTracking, cancellationToken);
+        }
 
-        public TEntity? Get<TEntity>((object, object, object) key, bool asNoTracking = true)
-            where TEntity : class
-            => Get<TEntity>([key.Item1, key.Item2, key.Item3], asNoTracking);
+        public TEntity? Get<TEntity>((object, object, object) key, bool asNoTracking = true) where TEntity : class
+        {
+            return Get<TEntity>([key.Item1, key.Item2, key.Item3], asNoTracking);
+        }
 
-        public async Task<TEntity?> GetAsync<TEntity>((object, object, object) key, bool asNoTracking = true, CancellationToken cancellationToken = default)
-            where TEntity : class
-            => await GetAsync<TEntity>([key.Item1, key.Item2, key.Item3], asNoTracking, cancellationToken);
+        public async Task<TEntity?> GetAsync<TEntity>((object, object, object) key, bool asNoTracking = true, CancellationToken cancellationToken = default) where TEntity : class
+        {
+            return await GetAsync<TEntity>([key.Item1, key.Item2, key.Item3], asNoTracking, cancellationToken);
+        }
 
         #endregion
 
         #region Public Methods: GetMany Sync & Async 
 
-        public IReadOnlyCollection<TEntity> GetMany<TEntity>(IEnumerable<object> keys, bool asNoTracking = true)
-            where TEntity : class
+        public IReadOnlyCollection<TEntity> GetMany<TEntity>(IEnumerable<object> keys, bool asNoTracking = true) where TEntity : class
         {
-            return GetMany(
-                    predicate: ExpressionHelper.BuildPredicate<TEntity>(keys, GetKeyPropertyNames<TEntity>()[0]),
-                    asNoTracking: asNoTracking);
+            try
+            {
+                return GetMany(
+                        predicate: ExpressionHelper.BuildPredicate<TEntity>(keys, GetKeyPropertyNames<TEntity>()[0]),
+                        asNoTracking: asNoTracking);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<IReadOnlyCollection<TEntity>> GetManyAsync<TEntity>(IEnumerable<object> keys, bool asNoTracking = true, CancellationToken cancellationToken = default)
             where TEntity : class
-            => await GetManyAsync(
-                predicate: ExpressionHelper.BuildPredicate<TEntity, object>(keys, GetKeyPropertyNames<TEntity>()[0]),
-                asNoTracking: asNoTracking,
-                cancellationToken: cancellationToken);
+        {
+            try
+            {
+                return await GetManyAsync(
+                        predicate: ExpressionHelper.BuildPredicate<TEntity, object>(keys, GetKeyPropertyNames<TEntity>()[0]),
+                        asNoTracking: asNoTracking,
+                        cancellationToken: cancellationToken);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public IReadOnlyCollection<TEntity> GetMany<TEntity>(IEnumerable<(object, object)> keys, bool asNoTracking = true)
             where TEntity : class
-            => GetMany(
-                predicate: ExpressionHelper.BuildPredicate<TEntity>(keys, GetKeyPropertyNames<TEntity>()),
-                asNoTracking: asNoTracking);
+        {
+            try
+            {
+                return GetMany(
+                        predicate: ExpressionHelper.BuildPredicate<TEntity>(keys, GetKeyPropertyNames<TEntity>()),
+                        asNoTracking: asNoTracking);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public async Task<IReadOnlyCollection<TEntity>> GetManyAsync<TEntity>(IEnumerable<(object, object)> keys, bool asNoTracking = true, CancellationToken cancellationToken = default)
             where TEntity : class
-            => await GetManyAsync(
-                predicate: ExpressionHelper.BuildPredicate<TEntity>(keys, GetKeyPropertyNames<TEntity>()),
-                asNoTracking: asNoTracking,
-                cancellationToken: cancellationToken);
+        {
+            try
+            {
+                return await GetManyAsync(
+                        predicate: ExpressionHelper.BuildPredicate<TEntity>(keys, GetKeyPropertyNames<TEntity>()),
+                        asNoTracking: asNoTracking,
+                        cancellationToken: cancellationToken);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public IReadOnlyCollection<TEntity> GetMany<TEntity>(IEnumerable<(object, object, object)> keys, bool asNoTracking = true)
             where TEntity : class
-            => GetMany(
-                predicate: ExpressionHelper.BuildPredicate<TEntity>(keys, GetKeyPropertyNames<TEntity>()),
-                asNoTracking: asNoTracking);
+        {
+            try
+            {
+                return GetMany(
+                        predicate: ExpressionHelper.BuildPredicate<TEntity>(keys, GetKeyPropertyNames<TEntity>()),
+                        asNoTracking: asNoTracking);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public async Task<IReadOnlyCollection<TEntity>> GetManyAsync<TEntity>(IEnumerable<(object, object, object)> keys, bool asNoTracking = true, CancellationToken cancellationToken = default)
             where TEntity : class
-            => await GetManyAsync(
-                predicate: ExpressionHelper.BuildPredicate<TEntity>(keys, GetKeyPropertyNames<TEntity>()),
-                asNoTracking: asNoTracking,
-                cancellationToken: cancellationToken);
+        {
+            try
+            {
+                return await GetManyAsync(
+                        predicate: ExpressionHelper.BuildPredicate<TEntity>(keys, GetKeyPropertyNames<TEntity>()),
+                        asNoTracking: asNoTracking,
+                        cancellationToken: cancellationToken);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         #endregion
 
@@ -168,7 +246,14 @@ namespace ITFCode.Core.InfrastructureV3.EfCore.Readers
         public TEntity? Get<TEntity>(Expression<Func<TEntity, bool>> predicate)
              where TEntity : class
         {
-            return DbContext.Set<TEntity>().FirstOrDefault(predicate);
+            try
+            {
+                return DbContext.Set<TEntity>().FirstOrDefault(predicate);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         #endregion

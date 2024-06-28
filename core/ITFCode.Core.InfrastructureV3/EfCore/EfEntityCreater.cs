@@ -28,10 +28,6 @@ namespace ITFCode.Core.InfrastructureV3.EfCore
 
                 return entityEntry.Entity;
             }
-            catch (OperationCanceledException)
-            {
-                throw;
-            }
             catch (Exception)
             {
                 throw;
@@ -43,9 +39,10 @@ namespace ITFCode.Core.InfrastructureV3.EfCore
         {
             ArgumentNullException.ThrowIfNull(entity, nameof(entity));
 
+            cancellationToken.ThrowIfCancellationRequested();
+
             try
             {
-                cancellationToken.ThrowIfCancellationRequested();
 
                 var entityEntry = await DbContext.Set<TEntity>().AddAsync(entity, cancellationToken);
 
@@ -53,10 +50,6 @@ namespace ITFCode.Core.InfrastructureV3.EfCore
                     await DbContext.SaveChangesAsync(cancellationToken);
 
                 return entityEntry.Entity;
-            }
-            catch (OperationCanceledException)
-            {
-                throw;
             }
             catch (Exception)
             {
@@ -87,18 +80,14 @@ namespace ITFCode.Core.InfrastructureV3.EfCore
         {
             CheckCollection(entities);
 
+            cancellationToken.ThrowIfCancellationRequested();
+
             try
             {
-                cancellationToken.ThrowIfCancellationRequested();
-
                 await DbContext.Set<TEntity>().AddRangeAsync(entities, cancellationToken);
 
                 if (shouldSave)
                     await DbContext.SaveChangesAsync(cancellationToken);
-            }
-            catch (OperationCanceledException)
-            {
-                throw;
             }
             catch (Exception)
             {

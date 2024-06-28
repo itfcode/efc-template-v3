@@ -1,5 +1,4 @@
-﻿using ITFCode.Core.Domain.Entities.Base;
-using ITFCode.Core.Domain.Exceptions.Collections;
+﻿using ITFCode.Core.Domain.Exceptions.Collections;
 using ITFCode.Core.Domain.Exceptions.DbContext;
 using ITFCode.Core.InfrastructureV3.EfCore.Base;
 using ITFCode.Core.InfrastructureV3.Helper;
@@ -36,14 +35,14 @@ namespace ITFCode.Core.InfrastructureV3.EfCore
 
         public async Task DeleteAsync<TEntity>(TEntity entity, bool shouldSave = false, CancellationToken cancellationToken = default) where TEntity : class
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             try
             {
-                cancellationToken.ThrowIfCancellationRequested();
-
                 DbContext.Entry(entity).State = EntityState.Deleted;
 
                 if (shouldSave)
-                    await DbContext.SaveChangesAsync();
+                    await DbContext.SaveChangesAsync(cancellationToken);
             }
             catch (Exception ex)
             {
@@ -52,23 +51,77 @@ namespace ITFCode.Core.InfrastructureV3.EfCore
         }
 
         public void Delete<TEntity>(object key, bool shouldSave = false) where TEntity : class
-            => Delete<TEntity>([key], shouldSave);
+        {
+            try
+            {
+                Delete<TEntity>([key], shouldSave);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public async Task DeleteAsync<TEntity>(object key, bool shouldSave = false, CancellationToken cancellationToken = default) where TEntity : class
-            => await DeleteAsync<TEntity>([key], shouldSave);
+        {
+            try
+            {
+                await DeleteAsync<TEntity>([key], shouldSave, cancellationToken);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public void Delete<TEntity>((object, object) key, bool shouldSave = false) where TEntity : class
-            => Delete<TEntity>([key.Item1, key.Item2], shouldSave);
+        {
+            try
+            {
+                Delete<TEntity>([key.Item1, key.Item2], shouldSave);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public async Task DeleteAsync<TEntity>((object, object) key, bool shouldSave = false, CancellationToken cancellationToken = default) where TEntity : class
-            => await DeleteAsync<TEntity>([key.Item1, key.Item2], shouldSave, cancellationToken);
+        {
+            try
+            {
+                await DeleteAsync<TEntity>([key.Item1, key.Item2], shouldSave, cancellationToken);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public void Delete<TEntity>((object, object, object) key, bool shouldSave = false) where TEntity : class
-            => Delete<TEntity>([key.Item1, key.Item2, key.Item3], shouldSave);
+        {
+            try
+            {
+                Delete<TEntity>([key.Item1, key.Item2, key.Item3], shouldSave);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public async Task DeleteAsync<TEntity>((object, object, object) key, bool shouldSave = false, CancellationToken cancellationToken = default) where TEntity : class
-            => await DeleteAsync<TEntity>([key.Item1, key.Item2, key.Item3], shouldSave, cancellationToken);
-
+        {
+            try
+            {
+                await DeleteAsync<TEntity>([key.Item1, key.Item2, key.Item3], shouldSave, cancellationToken);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+       
         #endregion
 
         #region Public Methods: Delete Many - Sync & Async 
@@ -93,10 +146,11 @@ namespace ITFCode.Core.InfrastructureV3.EfCore
 
         public async Task DeleteRangeAsync<TEntity>(IEnumerable<TEntity> entities, bool shouldSave = false, CancellationToken cancellationToken = default) where TEntity : class
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             try
             {
-                cancellationToken.ThrowIfCancellationRequested();
-
+ 
                 foreach (var entity in entities)
                 {
                     DbContext.Entry(entity).State = EntityState.Deleted;
@@ -194,7 +248,6 @@ namespace ITFCode.Core.InfrastructureV3.EfCore
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -246,10 +299,6 @@ namespace ITFCode.Core.InfrastructureV3.EfCore
                 if (shouldSave)
                     await DbContext.SaveChangesAsync();
             }
-            catch (OperationCanceledException)
-            {
-                throw;
-            }
             catch (Exception ex)
             {
                 throw new DeleteEntityException(ex.Message, ex);
@@ -283,10 +332,12 @@ namespace ITFCode.Core.InfrastructureV3.EfCore
         private async Task DeleteRangeAsync<TEntity>(Expression<Func<TEntity, bool>> predicate, bool shouldSave = false, CancellationToken cancellationToken = default)
             where TEntity : class
         {
+            ArgumentNullException.ThrowIfNull(nameof(predicate));   
+
+            cancellationToken.ThrowIfCancellationRequested();
+
             try
             {
-                cancellationToken.ThrowIfCancellationRequested();
-
                 var entities = await DbContext.Set<TEntity>()
                     .Where(predicate)
                     .ToListAsync(cancellationToken);
@@ -299,10 +350,6 @@ namespace ITFCode.Core.InfrastructureV3.EfCore
 
                 if (shouldSave)
                     await DbContext.SaveChangesAsync(cancellationToken);
-            }
-            catch (OperationCanceledException)
-            {
-                throw;
             }
             catch (Exception ex)
             {

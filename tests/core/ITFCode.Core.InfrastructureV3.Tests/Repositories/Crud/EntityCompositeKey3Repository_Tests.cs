@@ -112,9 +112,13 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact]
-        public override Task InsertAsync_Throw_If_Cancellation()
+        public override async Task InsertAsync_Throw_If_Cancellation()
         {
-            throw new NotImplementedException();
+            var repository = CreateRepository();
+            var cancellationToken = CreateCancellationToken();
+
+            await Assert.ThrowsAsync<OperationCanceledException>(
+                () => repository.InsertAsync(DefaultData.ProductOrder1, cancellationToken));
         }
 
         #endregion
@@ -138,9 +142,13 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact]
-        public override Task InsertRangeAsync_Throw_If_Cancellation()
+        public override async Task InsertRangeAsync_Throw_If_Cancellation()
         {
-            throw new NotImplementedException();
+            var repository = CreateRepository();
+            var cancellationToken = CreateCancellationToken();
+
+            await Assert.ThrowsAsync<OperationCanceledException>(
+                () => repository.InsertRangeAsync([DefaultData.ProductOrder1, DefaultData.ProductOrder1], cancellationToken));
         }
 
         #endregion
@@ -164,9 +172,17 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact]
-        public override Task UpdateAsync_Throw_If_Cancellation()
+        public override async Task UpdateAsync_Throw_If_Cancellation()
         {
-            throw new NotImplementedException();
+            var repository = CreateRepository();
+            var cancellationToken = CreateCancellationToken();
+
+            await Assert.ThrowsAsync<OperationCanceledException>(
+                () => repository.UpdateAsync(DefaultData.ProductOrder1, cancellationToken));
+
+            var key = (DefaultData.ProductOrder1.Key1, DefaultData.ProductOrder1.Key2, DefaultData.ProductOrder1.Key3);
+            await Assert.ThrowsAsync<OperationCanceledException>(
+                () => repository.UpdateAsync(key, p => p.Code = 10, cancellationToken));
         }
 
         #endregion
@@ -216,9 +232,14 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact]
-        public override Task DeleteAsync_Throw_If_Cancellation()
+        public override async Task DeleteAsync_Throw_If_Cancellation()
         {
-            throw new NotImplementedException();
+            var repository = CreateRepository();
+            var cancellationToken = CreateCancellationToken();
+            var key = (Guid.NewGuid(), "value", 1);
+
+            await Assert.ThrowsAsync<OperationCanceledException>(
+                () => repository.DeleteAsync(key, cancellationToken));
         }
 
         #endregion
@@ -242,9 +263,18 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact]
-        public override Task DeleteRangeAsync_Throw_If_Cancellation()
+        public override async Task DeleteRangeAsync_Throw_If_Cancellation()
         {
-            throw new NotImplementedException();
+            var repository = CreateRepository();
+            var cancellationToken = CreateCancellationToken();
+            IEnumerable<(Guid, string, int)> keys = [(Guid.NewGuid(), "value1", 1), (Guid.NewGuid(), "value2", 2)];
+
+            await Assert.ThrowsAsync<OperationCanceledException>(
+                () => repository.DeleteRangeAsync(keys, cancellationToken));
+
+            IEnumerable<ProductOrderTc> productOrders = [DefaultData.ProductOrder1, DefaultData.ProductOrder2];
+            await Assert.ThrowsAsync<OperationCanceledException>(
+                () => repository.DeleteRangeAsync(productOrders, cancellationToken));
         }
 
         #endregion

@@ -61,7 +61,6 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
             try
             {
                 return await DbReader.GetManyAsync<TEntity>(keys.ToTuplesOfObjects(), asNoTracking: true);
-
             }
             catch (Exception)
             {

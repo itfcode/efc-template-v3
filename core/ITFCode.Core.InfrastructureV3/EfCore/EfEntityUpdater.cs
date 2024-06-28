@@ -42,10 +42,10 @@ namespace ITFCode.Core.InfrastructureV3.EfCore
         {
             ArgumentNullException.ThrowIfNull(entity, nameof(entity));
 
+            cancellationToken.ThrowIfCancellationRequested();
+
             try
             {
-                cancellationToken.ThrowIfCancellationRequested();
-
                 DbContext.Entry(entity).State = EntityState.Modified;
 
                 if (shouldSave)
@@ -61,27 +61,81 @@ namespace ITFCode.Core.InfrastructureV3.EfCore
 
         public TEntity Update<TEntity>(object key, Action<TEntity> updater, bool shouldSave = false)
             where TEntity : class
-            => Update([key], updater, shouldSave);
+        {
+            try
+            {
+                return Update([key], updater, shouldSave);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public async Task<TEntity> UpdateAsync<TEntity>(object key, Action<TEntity> updater, bool shouldSave = false, CancellationToken cancellationToken = default)
             where TEntity : class
-            => await UpdateAsync([key], updater, shouldSave, cancellationToken);
+        {
+            try
+            {
+                return await UpdateAsync([key], updater, shouldSave, cancellationToken);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public TEntity Update<TEntity>((object, object) key, Action<TEntity> updater, bool shouldSave = false)
             where TEntity : class
-            => Update([key.Item1, key.Item2], updater, shouldSave);
+        {
+            try
+            {
+                return Update([key.Item1, key.Item2], updater, shouldSave);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public async Task<TEntity> UpdateAsync<TEntity>((object, object) key, Action<TEntity> updater, bool shouldSave = false, CancellationToken cancellationToken = default)
             where TEntity : class
-            => await UpdateAsync([key.Item1, key.Item2], updater, shouldSave, cancellationToken);
+        {
+            try
+            {
+                return await UpdateAsync([key.Item1, key.Item2], updater, shouldSave, cancellationToken);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public TEntity Update<TEntity>((object, object, object) key, Action<TEntity> updater, bool shouldSave = false)
             where TEntity : class
-            => Update([key.Item1, key.Item2, key.Item3], updater, shouldSave);
+        {
+            try
+            {
+                return Update([key.Item1, key.Item2, key.Item3], updater, shouldSave);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public async Task<TEntity> UpdateAsync<TEntity>((object, object, object) key, Action<TEntity> updater, bool shouldSave = false, CancellationToken cancellationToken = default)
             where TEntity : class
-            => await UpdateAsync([key.Item1, key.Item2, key.Item3], updater, shouldSave, cancellationToken);
+        {
+            try
+            {
+                return await UpdateAsync([key.Item1, key.Item2, key.Item3], updater, shouldSave, cancellationToken);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         #endregion
 
@@ -127,27 +181,81 @@ namespace ITFCode.Core.InfrastructureV3.EfCore
 
         public void UpdateRange<TEntity>(IEnumerable<object> keys, Action<TEntity> updater, bool shouldSave = false)
             where TEntity : class
-            => UpdateRange(ToArraysOfObjects(keys), updater, shouldSave);
+        {
+            try
+            {
+                UpdateRange(ToArraysOfObjects(keys), updater, shouldSave);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public async Task UpdateRangeAsync<TEntity>(IEnumerable<object> keys, Action<TEntity> updater, bool shouldSave = false, CancellationToken cancellationToken = default)
             where TEntity : class
-            => await UpdateRangeAsync(ToArraysOfObjects(keys), updater, shouldSave, cancellationToken);
+        {
+            try
+            {
+                await UpdateRangeAsync(ToArraysOfObjects(keys), updater, shouldSave, cancellationToken);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public void UpdateRange<TEntity>(IEnumerable<(object, object)> keys, Action<TEntity> updater, bool shouldSave = false)
             where TEntity : class
-            => UpdateRange(CollectionHelper.ToArraysOfObjects(keys), updater, shouldSave);
+        {
+            try
+            {
+                UpdateRange(CollectionHelper.ToArraysOfObjects(keys), updater, shouldSave);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public async Task UpdateRangeAsync<TEntity>(IEnumerable<(object, object)> keys, Action<TEntity> updater, bool shouldSave = false, CancellationToken cancellationToken = default)
             where TEntity : class
-            => await UpdateRangeAsync(CollectionHelper.ToArraysOfObjects(keys), updater, shouldSave, cancellationToken);
+        {
+            try
+            {
+                await UpdateRangeAsync(CollectionHelper.ToArraysOfObjects(keys), updater, shouldSave, cancellationToken);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public void UpdateRange<TEntity>(IEnumerable<(object, object, object)> keys, Action<TEntity> updater, bool shouldSave = false)
             where TEntity : class
-            => UpdateRange(CollectionHelper.ToArraysOfObjects(keys), updater, shouldSave);
+        {
+            try
+            {
+                UpdateRange(CollectionHelper.ToArraysOfObjects(keys), updater, shouldSave);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public async Task UpdateRangeAsync<TEntity>(IEnumerable<(object, object, object)> keys, Action<TEntity> updater, bool shouldSave = false, CancellationToken cancellationToken = default)
             where TEntity : class
-            => await UpdateRangeAsync(CollectionHelper.ToArraysOfObjects(keys), updater, shouldSave, cancellationToken);
+        {
+            try
+            {
+                await UpdateRangeAsync(CollectionHelper.ToArraysOfObjects(keys), updater, shouldSave, cancellationToken);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         #endregion
 
