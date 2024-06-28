@@ -1,6 +1,7 @@
-﻿using Fare;
-using ITFCode.Core.Common.Tests.Entities;
+﻿using ITFCode.Core.Common.Tests.Entities;
 using ITFCode.Core.Common.Tests.TestKit;
+using ITFCode.Core.Domain.Entities.Base;
+using ITFCode.Core.Domain.Entities.Base.Interfaces;
 using ITFCode.Core.InfrastructureV3.Repositories.Crud.Interfaces;
 using ITFCode.Core.InfrastructureV3.Tests.TestKit.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -103,7 +104,13 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         [Fact]
         public override async Task GetManyAsync_Throw_If_Cancellation()
         {
-            throw new NotImplementedException();
+            var repository = CreateRepository();
+            var cancellationToken = CreateCancellationToken();
+
+            IEnumerable<int> keys = [DefaultData.UserAdmin.Id, DefaultData.UserManager.Id];
+
+            await Assert.ThrowsAsync<OperationCanceledException>(
+                () => repository.GetManyAsync(keys, cancellationToken: cancellationToken));
         }
 
         #endregion
@@ -161,7 +168,12 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         [Fact]
         public override async Task InsertAsync_Throw_If_Cancellation()
         {
-            throw new NotImplementedException();
+            var repository = CreateRepository();
+            var cancellationToken = CreateCancellationToken();
+            var user = DefaultData.UserAdmin;
+
+            await Assert.ThrowsAsync<OperationCanceledException>(
+                () => repository.InsertAsync(user, cancellationToken: cancellationToken));
         }
 
         #endregion
@@ -231,7 +243,12 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         [Fact]
         public override async Task InsertRangeAsync_Throw_If_Cancellation()
         {
-            throw new NotImplementedException();
+            var repository = CreateRepository();
+            var cancellationToken = CreateCancellationToken();
+            IEnumerable<UserTc> users = [DefaultData.UserAdmin, DefaultData.UserManager];
+
+            await Assert.ThrowsAsync<OperationCanceledException>(
+                () => repository.InsertRangeAsync(users, cancellationToken: cancellationToken));
         }
 
         #endregion
@@ -239,7 +256,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: Update(TKey key, Action<TEntity> updater)
 
         [Fact]
-        public override void Update_If_Param_Is_Correct_Then_Ok()
+        public override void Update_By_Key_If_Param_Is_Correct_Then_Ok()
         {
             AddTestingData();
 
@@ -274,7 +291,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: UpdateAsync(TKey key, Action<TEntity> updater, CancellationToken cancellationToken = default)
 
         [Fact]
-        public override async Task UpdateAsync_If_Param_Is_Correct_Then_Ok()
+        public override async Task UpdateAsync_By_Key_If_Param_Is_Correct_Then_Ok()
         {
             await AddTestingDataAsync();
 
@@ -305,9 +322,17 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact]
-        public override Task UpdateAsync_Throw_If_Cancellation()
+        public override async Task UpdateAsync_Throw_If_Cancellation()
         {
-            throw new NotImplementedException();
+            var repository = CreateRepository();
+            var cancellationToken = CreateCancellationToken();
+            var user = DefaultData.UserAdmin;
+
+            await Assert.ThrowsAsync<OperationCanceledException>(
+                () => repository.UpdateAsync(user, cancellationToken: cancellationToken));
+
+            await Assert.ThrowsAsync<OperationCanceledException>(
+                () => repository.UpdateAsync(user.Id, x => x.FirstName = "NewFirstName", cancellationToken: cancellationToken));
         }
 
         #endregion
@@ -315,9 +340,93 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: UpdateRange(IEnumerable<TKey> keys, Action<TEntity> updater)
 
         [Fact]
-        public override void UpdateRange_If_Param_Is_Correct_Then_Ok()
+        public override void UpdateRange_By_Keys_If_Param_Is_Correct_Then_Ok()
         {
-            throw new NotImplementedException();
+            AddTestingData();
+
+            Expression<Func<UserTc, bool>> predicate1 = x => x.Id == DefaultData.UserAdmin.Id;
+            Expression<Func<UserTc, bool>> predicate2 = x => x.Id == DefaultData.UserManager.Id;
+
+            var user1 = UserSet.FirstOrDefault(predicate1);
+            var user2 = UserSet.FirstOrDefault(predicate2);
+
+            Assert.NotNull(user1);
+            Assert.NotNull(user2);
+
+            var newFirstName1 = $"New_{user1.FirstName}";
+            var newFirstName2 = $"New_{user2.FirstName}";
+
+            var repository = CreateRepository();
+
+            user1.FirstName = newFirstName1;
+            user2.FirstName = newFirstName2;
+
+            repository.UpdateRange([user1, user2]);
+
+            Assert.Equal(EntityState.Modified, _dbContext.Entry(user1).State);
+            Assert.Equal(EntityState.Modified, _dbContext.Entry(user2).State);
+
+            var userBefore1 = UserSet.AsNoTracking().FirstOrDefault(predicate1);
+            var userBefore2 = UserSet.AsNoTracking().FirstOrDefault(predicate2);
+
+            Assert.NotNull(userBefore1);
+            Assert.NotNull(userBefore2);
+            Assert.NotEqual(newFirstName1, userBefore1.FirstName);
+            Assert.NotEqual(newFirstName2, userBefore2.FirstName);
+
+            repository.Commit();
+
+            var userAfter1 = UserSet.AsNoTracking().FirstOrDefault(predicate1);
+            var userAfter2 = UserSet.AsNoTracking().FirstOrDefault(predicate2);
+
+            Assert.NotNull(userAfter1);
+            Assert.NotNull(userAfter2);
+            Assert.Equal(newFirstName1, userAfter1.FirstName);
+            Assert.Equal(newFirstName2, userAfter2.FirstName);
+            Assert.Equal(EntityState.Detached, _dbContext.Entry(user1).State);
+            Assert.Equal(EntityState.Detached, _dbContext.Entry(user2).State);
+        }
+
+        [Fact]
+        public override void UpdateRange_If_Params_Are_Correct_Then_Ok()
+        {
+            AddTestingData();
+
+            Expression<Func<UserTc, bool>> predicate1 = x => x.Id == DefaultData.UserAdmin.Id;
+            Expression<Func<UserTc, bool>> predicate2 = x => x.Id == DefaultData.UserManager.Id;
+
+            var user1 = UserSet.AsNoTracking().FirstOrDefault(predicate1);
+            var user2 = UserSet.AsNoTracking().FirstOrDefault(predicate2);
+
+            Assert.NotNull(user1);
+            Assert.NotNull(user2);
+
+            var repository = CreateRepository();
+
+            repository.UpdateRange([user1.Key, user2.Key], x => x.FirstName = $"New{x.FirstName}");
+
+            Assert.Equal(EntityState.Detached, _dbContext.Entry(user1).State);
+            Assert.Equal(EntityState.Detached, _dbContext.Entry(user2).State);
+
+            var userBefore1 = UserSet.AsNoTracking().FirstOrDefault(predicate1);
+            var userBefore2 = UserSet.AsNoTracking().FirstOrDefault(predicate2);
+
+            Assert.NotNull(userBefore1);
+            Assert.NotNull(userBefore2);
+            Assert.NotEqual($"New{user1.FirstName}", userBefore1.FirstName);
+            Assert.NotEqual($"New{user2.FirstName}", userBefore2.FirstName);
+
+            repository.Commit();
+
+            var userAfter1 = UserSet.AsNoTracking().FirstOrDefault(predicate1);
+            var userAfter2 = UserSet.AsNoTracking().FirstOrDefault(predicate2);
+
+            Assert.NotNull(userAfter1);
+            Assert.NotNull(userAfter2);
+            Assert.Equal($"New{user1.FirstName}", userAfter1.FirstName);
+            Assert.Equal($"New{user2.FirstName}", userAfter2.FirstName);
+            Assert.Equal(EntityState.Detached, _dbContext.Entry(user1).State);
+            Assert.Equal(EntityState.Detached, _dbContext.Entry(user2).State);
         }
 
         #endregion
@@ -325,7 +434,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: UpdateRangeAsync(IEnumerable<TKey> keys, Action<TEntity> updater, CancellationToken cancellationToken = default)
 
         [Fact]
-        public override async Task UpdateRangeAsync_If_Param_Is_Correct_Then_Ok()
+        public override async Task UpdateRangeAsync_By_Keys_If_Param_Is_Correct_Then_Ok()
         {
             await AddTestingDataAsync();
 
@@ -334,6 +443,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
 
             var userAdmin = UserSet.FirstOrDefault(predicate1);
             var userManager = UserSet.FirstOrDefault(predicate2);
+
             Assert.NotNull(userAdmin);
             Assert.NotNull(userManager);
 
@@ -371,9 +481,62 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact]
-        public override Task UpdateRangeAsync_Throw_If_Cancellation()
+        public override async Task UpdateRangeAsync_If_Params_Are_Correct_Then_Ok()
         {
-            throw new NotImplementedException();
+            await AddTestingDataAsync();
+
+            Expression<Func<UserTc, bool>> predicate1 = x => x.Id == DefaultData.UserAdmin.Id;
+            Expression<Func<UserTc, bool>> predicate2 = x => x.Id == DefaultData.UserManager.Id;
+
+            var user1 = UserSet.FirstOrDefault(predicate1);
+            var user2 = UserSet.FirstOrDefault(predicate2);
+
+            Assert.NotNull(user1);
+            Assert.NotNull(user2);
+
+            var repository = CreateRepository();
+
+            repository.UpdateRange([user1.Key, user2.Key], x => x.FirstName = $"New_{x.FirstName}");
+
+            Assert.Equal(EntityState.Modified, _dbContext.Entry(user1).State);
+            Assert.Equal(EntityState.Modified, _dbContext.Entry(user2).State);
+
+            var userBefore1 = UserSet.AsNoTracking().FirstOrDefault(predicate1);
+            var userBefore2 = UserSet.AsNoTracking().FirstOrDefault(predicate2);
+
+            Assert.NotNull(userBefore1);
+            Assert.NotNull(userBefore2);
+            Assert.NotEqual($"New_{user1.FirstName}", userBefore1.FirstName);
+            Assert.NotEqual($"New_{user2.FirstName}", userBefore2.FirstName);
+
+            repository.Commit();
+
+            var userAfter1 = UserSet.AsNoTracking().FirstOrDefault(predicate1);
+            var userAfter2 = UserSet.AsNoTracking().FirstOrDefault(predicate2);
+
+            Assert.NotNull(userAfter1);
+            Assert.NotNull(userAfter2);
+            Assert.NotEqual($"New_{user1.FirstName}", userAfter1.FirstName);
+            Assert.NotEqual($"New_{user2.FirstName}", userAfter2.FirstName);
+            Assert.Equal(EntityState.Detached, _dbContext.Entry(user1).State);
+            Assert.Equal(EntityState.Detached, _dbContext.Entry(user2).State);
+        }
+
+        [Fact]
+        public override async Task UpdateRangeAsync_Throw_If_Cancellation()
+        {
+            var repository = CreateRepository();
+            var cancellationToken = CreateCancellationToken();
+
+            IEnumerable<UserTc> users = [DefaultData.UserAdmin, DefaultData.UserManager];
+
+            await Assert.ThrowsAsync<OperationCanceledException>(
+                () => repository.UpdateRangeAsync(users, cancellationToken: cancellationToken));
+
+            IEnumerable<int> keys = users.Select(x => x.Id);
+
+            await Assert.ThrowsAsync<OperationCanceledException>(
+                () => repository.UpdateRangeAsync(keys, x => x.FirstName = "NewFirstName", cancellationToken: cancellationToken));
         }
 
         #endregion
@@ -381,22 +544,22 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: Delete(TKey key)
 
         [Fact]
-        public override void Delete_If_Param_Is_Correct_Then_Ok()
+        public override void Delete_By_Key_If_Param_Is_Correct_Then_Ok()
         {
             AddTestingData();
 
-            var repository = CreateRepository();
-
             var userId = DefaultData.UserAdmin.Id;
+            Expression<Func<UserTc, bool>> predicate = x => x.Id == userId;
 
+            var repository = CreateRepository();
             repository.Delete(userId);
 
-            var entity = UserSet.FirstOrDefault(x => x.Id == userId);
+            var entity = UserSet.FirstOrDefault(predicate);
             Assert.NotNull(entity);
 
             repository.Commit();
 
-            entity = UserSet.FirstOrDefault(x => x.Id == userId);
+            entity = UserSet.FirstOrDefault(predicate);
             Assert.Null(entity);
         }
 
@@ -405,9 +568,23 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: DeleteAsync(TKey key, CancellationToken cancellationToken = default)
 
         [Fact]
-        public override Task DeleteAsync_If_Param_Is_Correct_Then_Ok()
+        public override async Task DeleteAsync_By_Key_If_Param_Is_Correct_Then_Ok()
         {
-            throw new NotImplementedException();
+            await AddTestingDataAsync();
+
+            var userId = DefaultData.UserAdmin.Id;
+            Expression<Func<UserTc, bool>> predicate = x => x.Id == userId;
+
+            var repository = CreateRepository();
+            await repository.DeleteAsync(userId);
+
+            var userBefore = await UserSet.FirstOrDefaultAsync(predicate);
+            Assert.NotNull(userBefore);
+
+            repository.Commit();
+
+            var userAfter = await UserSet.FirstOrDefaultAsync(predicate);
+            Assert.Null(userAfter);
         }
 
         public override Task DeleteAsync_Throw_If_Cancellation()
@@ -420,9 +597,32 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: DeleteRange(IEnumerable<TKey> keys)
 
         [Fact]
-        public override void DeleteRange_If_Param_Is_Correct_Then_Ok()
+        public override void DeleteRange_By_Keys_If_Param_Is_Correct_Then_Ok()
         {
-            throw new NotImplementedException();
+            AddTestingData();
+
+            var userId1 = DefaultData.UserAdmin.Id;
+            var userId2 = DefaultData.UserManager.Id;
+
+            Expression<Func<UserTc, bool>> predicate1 = x => x.Id == userId1;
+            Expression<Func<UserTc, bool>> predicate2 = x => x.Id == userId2;
+
+            var repository = CreateRepository();
+            repository.DeleteRange([userId1, userId2]);
+
+            var userBefore1 = UserSet.FirstOrDefault(predicate1);
+            var userBefore2 = UserSet.FirstOrDefault(predicate1);
+
+            Assert.NotNull(userBefore1);
+            Assert.NotNull(userBefore2);
+
+            repository.Commit();
+
+            var userAfter1 = UserSet.FirstOrDefault(predicate1);
+            var userAfter2 = UserSet.FirstOrDefault(predicate1);
+
+            Assert.Null(userAfter1);
+            Assert.Null(userAfter2);
         }
 
         #endregion
@@ -430,15 +630,44 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: DeleteRangeAsync(IEnumerable<TKey> keys, CancellationToken cancellationToken = default)
 
         [Fact]
-        public override Task DeleteRangeAsync_If_Param_Is_Correct_Then_Ok()
+        public override async Task DeleteRangeAsync_By_Keys_If_Param_Is_Correct_Then_Ok()
         {
-            throw new NotImplementedException();
+            await AddTestingDataAsync();
+
+            var userId1 = DefaultData.UserAdmin.Id;
+            var userId2 = DefaultData.UserManager.Id;
+
+            Expression<Func<UserTc, bool>> predicate1 = x => x.Id == userId1;
+            Expression<Func<UserTc, bool>> predicate2 = x => x.Id == userId2;
+
+            var repository = CreateRepository();
+            await repository.DeleteRangeAsync([userId1, userId2]);
+
+            var userBefore1 = await UserSet.FirstOrDefaultAsync(predicate1);
+            var userBefore2 = await UserSet.FirstOrDefaultAsync(predicate1);
+
+            Assert.NotNull(userBefore1);
+            Assert.NotNull(userBefore2);
+
+            await repository.CommitAsync();
+
+            var userAfter1 = UserSet.FirstOrDefault(predicate1);
+            var userAfter2 = UserSet.FirstOrDefault(predicate1);
+
+            Assert.Null(userAfter1);
+            Assert.Null(userAfter2);
         }
 
         [Fact]
-        public override Task DeleteRangeAsync_Throw_If_Cancellation()
+        public override async Task DeleteRangeAsync_By_Keys_Throw_If_Cancellation()
         {
-            throw new NotImplementedException();
+            var repository = CreateRepository();
+            var cancellationToken = CreateCancellationToken();
+
+            IEnumerable<UserTc> users = [DefaultData.UserAdmin, DefaultData.UserManager];
+
+            await Assert.ThrowsAsync<OperationCanceledException>(
+                () => repository.DeleteRangeAsync(users, cancellationToken: cancellationToken));
         }
 
         #endregion

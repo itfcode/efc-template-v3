@@ -34,7 +34,7 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
         {
             try
             {
-                return await DbReader.GetAsync<TEntity>(key, asNoTracking: true);
+                return await DbReader.GetAsync<TEntity>(key, asNoTracking: true, cancellationToken);
             }
             catch (Exception)
             {
@@ -58,7 +58,7 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
         {
             try
             {
-                return await DbReader.GetManyAsync<TEntity>(keys.Cast<object>(), asNoTracking: true);
+                return await DbReader.GetManyAsync<TEntity>(keys.Cast<object>(), asNoTracking: true, cancellationToken);
             }
             catch (Exception)
             {
@@ -106,7 +106,7 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
         {
             try
             {
-                await DbUpdater.UpdateRangeAsync(keys.Cast<object>(), updater, shouldSave: false);
+                await DbUpdater.UpdateRangeAsync(keys.Cast<object>(), updater, shouldSave: false, cancellationToken);
             }
             catch (Exception)
             {
@@ -142,7 +142,7 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
         {
             try
             {
-                DbDeleter.DeleteRange(keys.Cast<object>(), shouldSave: false);
+                DbDeleter.DeleteRange<TEntity>(keys.Cast<object>(), shouldSave: false);
             }
             catch (Exception)
             {
@@ -154,7 +154,7 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
         {
             try
             {
-                await DbDeleter.DeleteRangeAsync(keys.Cast<object>(), shouldSave: false);
+                await DbDeleter.DeleteRangeAsync<TEntity>(keys.Cast<object>(), shouldSave: false);
             }
             catch (Exception)
             {

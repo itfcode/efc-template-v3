@@ -3,6 +3,8 @@ using ITFCode.Core.Common.Tests.TestKit;
 using ITFCode.Core.InfrastructureV3.Repositories.Crud.Interfaces;
 using ITFCode.Core.InfrastructureV3.Tests.TestKit.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Linq.Expressions;
 
 namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
 {
@@ -17,16 +19,14 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
 
             var repository = CreateRepository();
 
-            var companyId = DefaultData.ProductOrder1.Key1;
-            var locationId = DefaultData.ProductOrder1.Key2;
-            var userId = DefaultData.ProductOrder1.Key3;
+            (Guid, string, int) key = (DefaultData.ProductOrder1.Key1, DefaultData.ProductOrder1.Key2, DefaultData.ProductOrder1.Key3);
 
-            var productOrder = repository.Get((companyId, locationId, userId));
+            var productOrder = repository.Get(key);
 
             Assert.NotNull(productOrder);
-            Assert.Equal(companyId, productOrder.CompanyId);
-            Assert.Equal(locationId, productOrder.LocationId);
-            Assert.Equal(userId, productOrder.UserId);
+            Assert.Equal(key.Item1, productOrder.CompanyId);
+            Assert.Equal(key.Item2, productOrder.LocationId);
+            Assert.Equal(key.Item3, productOrder.UserId);
             Assert.Equal(EntityState.Detached, _dbContext.Entry(productOrder).State);
         }
 
@@ -41,16 +41,14 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
 
             var repository = CreateRepository();
 
-            var companyId = DefaultData.ProductOrder1.Key1;
-            var locationId = DefaultData.ProductOrder1.Key2;
-            var userId = DefaultData.ProductOrder1.Key3;
+            (Guid, string, int) key = (DefaultData.ProductOrder1.Key1, DefaultData.ProductOrder1.Key2, DefaultData.ProductOrder1.Key3);
 
-            var productOrder = await repository.GetAsync((companyId, locationId, userId));
+            var productOrder = await repository.GetAsync(key);
 
             Assert.NotNull(productOrder);
-            Assert.Equal(companyId, productOrder.CompanyId);
-            Assert.Equal(locationId, productOrder.LocationId);
-            Assert.Equal(userId, productOrder.UserId);
+            Assert.Equal(key.Item1, productOrder.CompanyId);
+            Assert.Equal(key.Item2, productOrder.LocationId);
+            Assert.Equal(key.Item3, productOrder.UserId);
             Assert.Equal(EntityState.Detached, _dbContext.Entry(productOrder).State);
         }
 
@@ -156,7 +154,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: Update((TKey1, TKey2, TKey3) key, Action<TEntity> updater, bool shouldSave = false)
 
         [Fact]
-        public override void Update_If_Param_Is_Correct_Then_Ok()
+        public override void Update_By_Key_If_Param_Is_Correct_Then_Ok()
         {
             throw new NotImplementedException();
         }
@@ -166,7 +164,13 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: UpdateAsync((TKey1, TKey2, TKey3) key, Action<TEntity> updater, bool shouldSave = false, CancellationToken cancellationToken = default)
 
         [Fact]
-        public override Task UpdateAsync_If_Param_Is_Correct_Then_Ok()
+        public override Task UpdateAsync_By_Key_If_Param_Is_Correct_Then_Ok()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public override void UpdateRange_If_Params_Are_Correct_Then_Ok()
         {
             throw new NotImplementedException();
         }
@@ -190,7 +194,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: UpdateRange(IEnumerable<(TKey1, TKey2, TKey3)> keys, Action<TEntity> updater, bool shouldSave = false)
 
         [Fact]
-        public override void UpdateRange_If_Param_Is_Correct_Then_Ok()
+        public override void UpdateRange_By_Keys_If_Param_Is_Correct_Then_Ok()
         {
             throw new NotImplementedException();
         }
@@ -200,10 +204,16 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: UpdateRangeAsync(IEnumerable<(TKey1, TKey2, TKey3)> keys, Action<TEntity> updater, bool shouldSave = false, CancellationToken cancellationToken = default)
 
         [Fact]
-        public override Task UpdateRangeAsync_If_Param_Is_Correct_Then_Ok()
+        public override Task UpdateRangeAsync_By_Keys_If_Param_Is_Correct_Then_Ok()
         {
             throw new NotImplementedException();
         }
+
+        public override async Task UpdateRangeAsync_If_Params_Are_Correct_Then_Ok()
+        {
+            throw new NotImplementedException();
+        }
+
 
         [Fact]
         public override Task UpdateRangeAsync_Throw_If_Cancellation()
@@ -216,9 +226,26 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: Delete((TKey1, TKey2, TKey3) key, bool shouldSave = false)
 
         [Fact]
-        public override void Delete_If_Param_Is_Correct_Then_Ok()
+        public override void Delete_By_Key_If_Param_Is_Correct_Then_Ok()
         {
-            throw new NotImplementedException();
+            AddTestingData();
+
+            (Guid, string, int) key = (DefaultData.ProductOrder1.Key1, DefaultData.ProductOrder1.Key2, DefaultData.ProductOrder1.Key3);
+            var repository = CreateRepository();
+
+            repository.Delete(key);
+
+            Expression<Func<ProductOrderTc, bool>> predicate = x => x.CompanyId == key.Item1 && x.LocationId == key.Item2 && x.UserId == key.Item3;
+
+            var orderBefore = ProductOrderSet.FirstOrDefault(predicate);
+
+            Assert.NotNull(orderBefore);
+
+            repository.Commit();
+
+            var orderAfter = ProductOrderSet.FirstOrDefault(predicate);
+
+            Assert.Null(orderAfter);
         }
 
         #endregion
@@ -226,9 +253,26 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: DeleteAsync((TKey1, TKey2, TKey3) key, bool shouldSave = false, CancellationToken cancellationToken = default)
 
         [Fact]
-        public override Task DeleteAsync_If_Param_Is_Correct_Then_Ok()
+        public override async Task DeleteAsync_By_Key_If_Param_Is_Correct_Then_Ok()
         {
-            throw new NotImplementedException();
+            await AddTestingDataAsync();
+
+            (Guid, string, int) key = (DefaultData.ProductOrder1.Key1, DefaultData.ProductOrder1.Key2, DefaultData.ProductOrder1.Key3);
+            var repository = CreateRepository();
+
+            await repository.DeleteAsync(key);
+
+            Expression<Func<ProductOrderTc, bool>> predicate = x => x.CompanyId == key.Item1 && x.LocationId == key.Item2 && x.UserId == key.Item3;
+
+            var orderBefore = await ProductOrderSet.FirstOrDefaultAsync(predicate);
+
+            Assert.NotNull(orderBefore);
+
+            repository.Commit();
+
+            var orderAfter = await ProductOrderSet.FirstOrDefaultAsync(predicate);
+
+            Assert.Null(orderAfter);
         }
 
         [Fact]
@@ -247,9 +291,33 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: DeleteRange(IEnumerable<(TKey1, TKey2, TKey3)> keys, bool shouldSave = false)
 
         [Fact]
-        public override void DeleteRange_If_Param_Is_Correct_Then_Ok()
+        public override void DeleteRange_By_Keys_If_Param_Is_Correct_Then_Ok()
         {
-            throw new NotImplementedException();
+            AddTestingData();
+
+            (Guid, string, int) key1 = (DefaultData.ProductOrder1.Key1, DefaultData.ProductOrder1.Key2, DefaultData.ProductOrder1.Key3);
+            (Guid, string, int) key2 = (DefaultData.ProductOrder2.Key1, DefaultData.ProductOrder2.Key2, DefaultData.ProductOrder2.Key3);
+
+            var repository = CreateRepository();
+
+            repository.DeleteRange([key1, key2]);
+
+            Expression<Func<ProductOrderTc, bool>> predicate1 = x => x.CompanyId == key1.Item1 && x.LocationId == key1.Item2 && x.UserId == key1.Item3;
+            Expression<Func<ProductOrderTc, bool>> predicate2 = x => x.CompanyId == key2.Item1 && x.LocationId == key2.Item2 && x.UserId == key2.Item3;
+
+            var orderBefore1 = ProductOrderSet.FirstOrDefault(predicate1);
+            var orderBefore2 = ProductOrderSet.FirstOrDefault(predicate2);
+
+            Assert.NotNull(orderBefore1);
+            Assert.NotNull(orderBefore2);
+
+            repository.Commit();
+
+            var orderAfter1 = ProductOrderSet.FirstOrDefault(predicate1);
+            var orderAfter2 = ProductOrderSet.FirstOrDefault(predicate2);
+
+            Assert.Null(orderAfter1);
+            Assert.Null(orderAfter2);
         }
 
         #endregion
@@ -257,13 +325,37 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: DeleteRangeAsync(IEnumerable<(TKey1, TKey2, TKey3)> keys, bool shouldSave = false, CancellationToken cancellationToken = default)
 
         [Fact]
-        public override Task DeleteRangeAsync_If_Param_Is_Correct_Then_Ok()
+        public override async Task DeleteRangeAsync_By_Keys_If_Param_Is_Correct_Then_Ok()
         {
-            throw new NotImplementedException();
+            await AddTestingDataAsync();
+
+            (Guid, string, int) key1 = (DefaultData.ProductOrder1.Key1, DefaultData.ProductOrder1.Key2, DefaultData.ProductOrder1.Key3);
+            (Guid, string, int) key2 = (DefaultData.ProductOrder2.Key1, DefaultData.ProductOrder2.Key2, DefaultData.ProductOrder2.Key3);
+
+            var repository = CreateRepository();
+
+            await repository.DeleteRangeAsync([key1, key2]);
+
+            Expression<Func<ProductOrderTc, bool>> predicate1 = x => x.CompanyId == key1.Item1 && x.LocationId == key1.Item2 && x.UserId == key1.Item3;
+            Expression<Func<ProductOrderTc, bool>> predicate2 = x => x.CompanyId == key2.Item1 && x.LocationId == key2.Item2 && x.UserId == key2.Item3;
+
+            var orderBefore1 = await ProductOrderSet.FirstOrDefaultAsync(predicate1);
+            var orderBefore2 = await ProductOrderSet.FirstOrDefaultAsync(predicate2);
+
+            Assert.NotNull(orderBefore1);
+            Assert.NotNull(orderBefore2);
+
+            await repository.CommitAsync();
+
+            var orderAfter1 = await ProductOrderSet.FirstOrDefaultAsync(predicate1);
+            var orderAfter2 = await ProductOrderSet.FirstOrDefaultAsync(predicate2);
+
+            Assert.Null(orderAfter1);
+            Assert.Null(orderAfter2);
         }
 
         [Fact]
-        public override async Task DeleteRangeAsync_Throw_If_Cancellation()
+        public override async Task DeleteRangeAsync_By_Keys_Throw_If_Cancellation()
         {
             var repository = CreateRepository();
             var cancellationToken = CreateCancellationToken();

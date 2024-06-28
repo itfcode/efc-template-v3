@@ -60,7 +60,7 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
         {
             try
             {
-                return await DbReader.GetManyAsync<TEntity>(keys.ToTuplesOfObjects(), asNoTracking: true);
+                return await DbReader.GetManyAsync<TEntity>(keys.ToTuplesOfObjects(), asNoTracking: true, cancellationToken);
             }
             catch (Exception)
             {
@@ -158,7 +158,7 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
         {
             try
             {
-                await DbDeleter.DeleteRangeAsync<TEntity>(keys.ToTuplesOfObjects(), shouldSave: false);
+                await DbDeleter.DeleteRangeAsync<TEntity>(keys.ToTuplesOfObjects(), shouldSave: false, cancellationToken);
             }
             catch (Exception)
             {
