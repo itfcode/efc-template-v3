@@ -8,47 +8,41 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Readonly
 {
     public class EntityCompositeKey2ReadonlyRepository_Tests : EntityReadonlyBaseRepository_Tests
     {
-        #region Tests: Get((TKey1, TKey2) key)
+        #region Tests: Get, GetAsync, GetMany & GetManyAsync 
 
-        [Fact]
+        [Fact] // Get((TKey1, TKey2) key)
         public override void Get_If_Param_Is_Correct_Then_Ok()
         {
             AddTestingData();
 
-            var productId = DefaultData.ProductA.Id;
-            var productCountryCode = DefaultData.ProductA.CountryCode;
+            (long, string) key = (DefaultData.ProductA.Id, DefaultData.ProductA.CountryCode);
 
             var repository = CreateRepository();
-            var entity = repository.Get((productId, productCountryCode));
+            var entity = repository.Get(key);
 
             Assert.NotNull(entity);
-            Assert.Equal(productId, entity.Key1);
-            Assert.Equal(productCountryCode, entity.Key2);
+            Assert.Equal(key.Item1, entity.Key1);
+            Assert.Equal(key.Item2, entity.Key2);
             Assert.Equal(EntityState.Detached, _dbContext.Entry(entity).State);
         }
 
-        #endregion
-       
-        #region Tests: GetAsync((TKey1, TKey2) key, CancellationToken cancellationToken = default)
-
-        [Fact]
+        [Fact] // GetAsync((TKey1, TKey2) key, CancellationToken cancellationToken = default)
         public override async Task GetAsync_If_Param_Is_Correct_Then_Ok()
         {
             AddTestingData();
 
-            var productId = DefaultData.ProductA.Id;
-            var productCountryCode = DefaultData.ProductA.CountryCode;
+            (long, string) key = (DefaultData.ProductA.Id, DefaultData.ProductA.CountryCode);
 
             var repository = CreateRepository();
-            var entity = await repository.GetAsync((productId, productCountryCode));
+            var entity = await repository.GetAsync(key);
 
             Assert.NotNull(entity);
-            Assert.Equal(productId, entity.Key1);
-            Assert.Equal(productCountryCode, entity.Key2);
+            Assert.Equal(key.Item1, entity.Key1);
+            Assert.Equal(key.Item2, entity.Key2);
             Assert.Equal(EntityState.Detached, _dbContext.Entry(entity).State);
         }
 
-        [Fact]
+        [Fact] // GetAsync((TKey1, TKey2) key, CancellationToken cancellationToken = default)
         public override async Task GetAsync_Throw_If_Cancellation()
         {
             var repository = CreateRepository();
@@ -57,68 +51,46 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Readonly
             await Assert.ThrowsAsync<OperationCanceledException>(
                 () => repository.GetAsync((1, "key_value"), cancellationToken: cancellationToken));
         }
-
-        #endregion
-
-        #region Tests: GetMany(IEnumerable<(TKey1, TKey2)> keys )
-
-        [Fact]
+ 
+        [Fact] // GetMany(IEnumerable<(TKey1, TKey2)> keys )
         public override void GetMany_If_Param_Is_Correct_Then_Ok()
         {
             AddTestingData();
 
-            var productId1 = DefaultData.ProductA.Id;
-            var productId2 = DefaultData.ProductB.Id;
-            var productCountryCode1 = DefaultData.ProductA.CountryCode;
-            var productCountryCode2 = DefaultData.ProductB.CountryCode;
+            (long, string) key1 = (DefaultData.ProductA.Id, DefaultData.ProductA.CountryCode);
+            (long, string) key2 = (DefaultData.ProductB.Id, DefaultData.ProductB.CountryCode);
 
             var repository = CreateRepository();
-            IEnumerable<(long, string)> keys = [(productId1, productCountryCode1), (productId2, productCountryCode2)];
+            IEnumerable<(long, string)> keys = [key1, key2];
 
             var entities = repository.GetMany(keys);
 
             Assert.NotEmpty(entities);
-
-            var entity1 = entities.FirstOrDefault(p => p.Key1 == productId1 && p.Key2 == productCountryCode1);
-            var entity2 = entities.FirstOrDefault(p => p.Key1 == productId2 && p.Key2 == productCountryCode2);
-
-            Assert.NotNull(entity1);
-            Assert.NotNull(entity2);
-            Assert.Equal(EntityState.Detached, _dbContext.Entry(entity1).State);
-            Assert.Equal(EntityState.Detached, _dbContext.Entry(entity2).State);
+            Assert.Equal(2, entities.Count);
+            Assert.True(entities.All(u => EntityState.Detached == _dbContext.Entry(u).State));
+            Assert.True(keys.All(k => entities.SingleOrDefault(u => u.Key1 == k.Item1 && u.Key2 == k.Item2) is not null));
         }
 
-        #endregion
-
-        #region Tests: GetManyAsync(IEnumerable<(TKey1, TKey2)> keys, CancellationToken cancellationToken = default)
-
-        [Fact]
+        [Fact] // GetManyAsync(IEnumerable<(TKey1, TKey2)> keys, CancellationToken cancellationToken = default)
         public override async Task GetManyAsync_If_Param_Is_Correct_Then_Ok()
         {
             await AddTestingDataAsync();
 
-            var productId1 = DefaultData.ProductA.Id;
-            var productId2 = DefaultData.ProductB.Id;
-            var productCountryCode1 = DefaultData.ProductA.CountryCode;
-            var productCountryCode2 = DefaultData.ProductB.CountryCode;
+            (long, string) key1 = (DefaultData.ProductA.Id, DefaultData.ProductA.CountryCode);
+            (long, string) key2 = (DefaultData.ProductB.Id, DefaultData.ProductB.CountryCode);
 
             var repository = CreateRepository();
-            IEnumerable<(long, string)> keys = [(productId1, productCountryCode1), (productId2, productCountryCode2)];
+            IEnumerable<(long, string)> keys = [key1, key2];
 
             var entities = await repository.GetManyAsync(keys);
 
             Assert.NotEmpty(entities);
-
-            var entity1 = entities.FirstOrDefault(p => p.Key1 == productId1 && p.Key2 == productCountryCode1);
-            var entity2 = entities.FirstOrDefault(p => p.Key1 == productId2 && p.Key2 == productCountryCode2);
-
-            Assert.NotNull(entity1);
-            Assert.NotNull(entity2);
-            Assert.Equal(EntityState.Detached, _dbContext.Entry(entity1).State);
-            Assert.Equal(EntityState.Detached, _dbContext.Entry(entity2).State);
+            Assert.Equal(2, entities.Count);
+            Assert.True(entities.All(u => EntityState.Detached == _dbContext.Entry(u).State));
+            Assert.True(keys.All(k => entities.SingleOrDefault(u => u.Key1 == k.Item1 && u.Key2 == k.Item2) is not null));
         }
 
-        [Fact]
+        [Fact] // GetManyAsync(IEnumerable<(TKey1, TKey2)> keys, CancellationToken cancellationToken = default)
         public override async Task GetManyAsync_Throw_If_Cancellation()
         {
             var repository = CreateRepository();

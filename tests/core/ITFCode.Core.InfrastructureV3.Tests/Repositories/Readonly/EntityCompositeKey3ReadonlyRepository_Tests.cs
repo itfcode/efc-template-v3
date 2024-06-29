@@ -8,82 +8,61 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Readonly
 {
     public class EntityCompositeKey3ReadonlyRepositoryTests : EntityReadonlyBaseRepository_Tests
     {
-        #region Tests: Get((TKey1, TKey2, TKey3) key, bool asNoTracking = true)
+        #region Tests: Get, GetAsync, GetMany & GetManyAsync
 
-        [Fact]
+        [Fact] // Get((TKey1, TKey2, TKey3) key, bool asNoTracking = true)
         public override void Get_If_Param_Is_Correct_Then_Ok()
         {
             AddTestingData();
 
-            var companyId = DefaultData.ProductOrder1.CompanyId;
-            var locationId = DefaultData.ProductOrder1.LocationId;
-            var userId = DefaultData.ProductOrder1.UserId;
-
+            (Guid, string, int) key = (DefaultData.ProductOrder1.CompanyId, DefaultData.ProductOrder1.LocationId, DefaultData.ProductOrder1.UserId);
             var repository = CreateRepository();
-            var entity = repository.Get((companyId, locationId, userId));
+            var entity = repository.Get(key);
 
             Assert.NotNull(entity);
-            Assert.Equal(companyId, entity.Key1);
-            Assert.Equal(locationId, entity.Key2);
-            Assert.Equal(userId, entity.Key3);
+            Assert.Equal(key.Item1, entity.Key1);
+            Assert.Equal(key.Item2, entity.Key2);
+            Assert.Equal(key.Item3, entity.Key3);
             Assert.Equal(EntityState.Detached, _dbContext.Entry(entity).State);
         }
 
-        #endregion
-
-        #region Tests: GetAsync((TKey1, TKey2, TKey3) key, bool asNoTracking = true, CancellationToken cancellationToken = default)
-
-        [Fact]
+        [Fact] // GetAsync((TKey1, TKey2, TKey3) key, bool asNoTracking = true, CancellationToken cancellationToken = default)
         public override async Task GetAsync_If_Param_Is_Correct_Then_Ok()
         {
             await AddTestingDataAsync();
 
-            var companyId = DefaultData.ProductOrder1.CompanyId;
-            var locationId = DefaultData.ProductOrder1.LocationId;
-            var userId = DefaultData.ProductOrder1.UserId;
-
+            (Guid, string, int) key = (DefaultData.ProductOrder1.CompanyId, DefaultData.ProductOrder1.LocationId, DefaultData.ProductOrder1.UserId);
             var repository = CreateRepository();
-            var entity = await repository.GetAsync((companyId, locationId, userId));
+            var entity = await repository.GetAsync(key);
 
             Assert.NotNull(entity);
-            Assert.Equal(companyId, entity.Key1);
-            Assert.Equal(locationId, entity.Key2);
-            Assert.Equal(userId, entity.Key3);
+            Assert.Equal(key.Item1, entity.Key1);
+            Assert.Equal(key.Item2, entity.Key2);
+            Assert.Equal(key.Item3, entity.Key3);
             Assert.Equal(EntityState.Detached, _dbContext.Entry(entity).State);
         }
 
-        [Fact]
+        [Fact] // GetAsync((TKey1, TKey2, TKey3) key, bool asNoTracking = true, CancellationToken cancellationToken = default)
         public override async Task GetAsync_Throw_If_Cancellation()
         {
             var repository = CreateRepository();
             var cancellationToken = CreateCancellationToken();
             (Guid, string, int) key = (DefaultData.ProductOrder1.Key1, DefaultData.ProductOrder1.Key2, DefaultData.ProductOrder1.Key3);
-                
+
             await Assert.ThrowsAsync<OperationCanceledException>(
                 () => repository.GetAsync(key, cancellationToken: cancellationToken));
         }
 
-        #endregion
-
-        #region Tests: GetMany(IEnumerable<(TKey1, TKey2, TKey3)> keys, bool asNoTracking = true)
-
-        [Fact]
+        [Fact] // GetMany(IEnumerable<(TKey1, TKey2, TKey3)> keys, bool asNoTracking = true)
         public override void GetMany_If_Param_Is_Correct_Then_Ok()
         {
             AddTestingData();
 
-            var companyId1 = DefaultData.ProductOrder1.CompanyId;
-            var locationId1 = DefaultData.ProductOrder1.LocationId;
-            var userId1 = DefaultData.ProductOrder1.UserId;
-
-            var companyId2 = DefaultData.ProductOrder2.CompanyId;
-            var locationId2 = DefaultData.ProductOrder2.LocationId;
-            var userId2 = DefaultData.ProductOrder2.UserId;
+            (Guid, string, int) key1 = (DefaultData.ProductOrder1.CompanyId, DefaultData.ProductOrder1.LocationId, DefaultData.ProductOrder1.UserId);
+            (Guid, string, int) key2 = (DefaultData.ProductOrder2.CompanyId, DefaultData.ProductOrder2.LocationId, DefaultData.ProductOrder2.UserId);
 
             var repository = CreateRepository();
-            IEnumerable<(Guid, string, int)> keys = [
-                (companyId1, locationId1, userId1),
-                (companyId2, locationId2, userId2)];
+            IEnumerable<(Guid, string, int)> keys = [key1, key2];
 
             var entities = repository.GetMany(keys);
 
@@ -93,27 +72,16 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Readonly
             Assert.True(keys.All(k => entities.SingleOrDefault(u => u.Key1 == k.Item1 && u.Key2 == k.Item2 && u.Key3 == k.Item3) is not null));
         }
 
-        #endregion
-
-        #region Tests: GetManyAsync(IEnumerable<(TKey1, TKey2, TKey3)> keys, bool asNoTracking = true, CancellationToken cancellationToken = default)
-
-        [Fact]
+        [Fact] // GetManyAsync(IEnumerable<(TKey1, TKey2, TKey3)> keys, bool asNoTracking = true, CancellationToken cancellationToken = default)
         public override async Task GetManyAsync_If_Param_Is_Correct_Then_Ok()
         {
             await AddTestingDataAsync();
 
-            var companyId1 = DefaultData.ProductOrder1.CompanyId;
-            var locationId1 = DefaultData.ProductOrder1.LocationId;
-            var userId1 = DefaultData.ProductOrder1.UserId;
-
-            var companyId2 = DefaultData.ProductOrder2.CompanyId;
-            var locationId2 = DefaultData.ProductOrder2.LocationId;
-            var userId2 = DefaultData.ProductOrder2.UserId;
+            (Guid, string, int) key1 = (DefaultData.ProductOrder1.CompanyId, DefaultData.ProductOrder1.LocationId, DefaultData.ProductOrder1.UserId);
+            (Guid, string, int) key2 = (DefaultData.ProductOrder2.CompanyId, DefaultData.ProductOrder2.LocationId, DefaultData.ProductOrder2.UserId);
 
             var repository = CreateRepository();
-            IEnumerable<(Guid, string, int)> keys = [
-                (companyId1, locationId1, userId1),
-                (companyId2, locationId2, userId2)];
+            IEnumerable<(Guid, string, int)> keys = [key1, key2];
 
             var entities = await repository.GetManyAsync(keys);
 
@@ -123,7 +91,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Readonly
             Assert.True(keys.All(k => entities.SingleOrDefault(u => u.Key1 == k.Item1 && u.Key2 == k.Item2 && u.Key3 == k.Item3) is not null));
         }
 
-        [Fact]
+        [Fact] // GetManyAsync(IEnumerable<(TKey1, TKey2, TKey3)> keys, bool asNoTracking = true, CancellationToken cancellationToken = default)
         public override async Task GetManyAsync_Throw_If_Cancellation()
         {
             var repository = CreateRepository();

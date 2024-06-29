@@ -151,7 +151,8 @@ namespace ITFCode.Core.InfrastructureV3.EfCore
                 foreach (var entity in entities)
                     DbContext.Entry(entity).State = EntityState.Modified;
 
-                if (shouldSave) DbContext.SaveChanges();
+                if (shouldSave) 
+                    DbContext.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -276,6 +277,8 @@ namespace ITFCode.Core.InfrastructureV3.EfCore
             try
             {
                 updater(entity);
+
+                //DbContext.Entry(entity).State = EntityState.Modified;
 
                 if (shouldSave)
                     DbContext.SaveChanges();

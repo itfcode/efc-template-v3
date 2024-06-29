@@ -3,11 +3,7 @@ using ITFCode.Core.Common.Tests.TestKit;
 using ITFCode.Core.InfrastructureV3.Repositories.Crud.Interfaces;
 using ITFCode.Core.InfrastructureV3.Tests.TestKit.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
 using System.Linq.Expressions;
-using System.Security.Cryptography;
 
 namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
 {
@@ -327,13 +323,13 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             Assert.Equal(EntityState.Detached, _dbContext.Entry(product).State);
         }
 
-        public override void UpdateRange_If_Params_Are_Correct_Then_Ok()
+        public override void UpdateRange_By_Enities_If_Params_Are_Correct_Then_Ok()
         {
             throw new NotImplementedException();
         }
 
         [Fact]
-        public override async Task UpdateAsync_Throw_If_Cancellation()
+        public override async Task UpdateAsync_By_Key_Throw_If_Cancellation()
         {
             var repository = CreateRepository();
             var cancellationToken = CreateCancellationToken();
@@ -443,13 +439,51 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             Assert.Equal(EntityState.Detached, _dbContext.Entry(product2).State);
         }
 
-        public override async Task UpdateRangeAsync_If_Params_Are_Correct_Then_Ok()
+        [Fact]
+        public override async Task UpdateRangeAsync_By_Entities_If_Params_Are_Correct_Then_Ok()
         {
-            throw new NotImplementedException();
+            await AddTestingDataAsync();
+
+            var repository = CreateRepository();
+
+            (long, string) key1 = (DefaultData.ProductA.Key1, DefaultData.ProductA.Key2);
+            (long, string) key2 = (DefaultData.ProductB.Key1, DefaultData.ProductB.Key2);
+            Expression<Func<ProductTc, bool>> predicate1 = x => x.Id == key1.Item1 && x.CountryCode == key1.Item2;
+            Expression<Func<ProductTc, bool>> predicate2 = x => x.Id == key2.Item1 && x.CountryCode == key2.Item2;
+
+            var product1 = await ProductSet.AsNoTracking().FirstOrDefaultAsync(predicate1);
+            var product2 = await ProductSet.AsNoTracking().FirstOrDefaultAsync(predicate2);
+
+            Assert.NotNull(product1);
+            Assert.NotNull(product2);
+
+            await repository.UpdateRangeAsync([key1, key2], x => x.Name = $"New{x.Name}");
+
+            var productBefore1 = await ProductSet.AsNoTracking().FirstOrDefaultAsync(predicate1);
+            var productBefore2 = await ProductSet.AsNoTracking().FirstOrDefaultAsync(predicate2);
+
+            Assert.NotNull(productBefore1);
+            Assert.NotNull(productBefore2);
+            Assert.NotEqual($"New{product1.Name}", productBefore1.Name);
+            Assert.NotEqual($"New{product2.Name}", productBefore2.Name);
+            Assert.Equal(EntityState.Detached, _dbContext.Entry(product1).State);
+            Assert.Equal(EntityState.Detached, _dbContext.Entry(product2).State);
+
+            repository.Commit();
+
+            var productAfter1 = await ProductSet.FirstOrDefaultAsync(predicate1);
+            var productAfter2 = await ProductSet.FirstOrDefaultAsync(predicate2);
+
+            Assert.NotNull(productAfter1);
+            Assert.NotNull(productAfter2);
+            Assert.Equal($"New{product1.Name}", productAfter1.Name);
+            Assert.Equal($"New{product2.Name}", productAfter2.Name);
+            Assert.Equal(EntityState.Detached, _dbContext.Entry(product1).State);
+            Assert.Equal(EntityState.Detached, _dbContext.Entry(product2).State);
         }
 
         [Fact]
-        public override async Task UpdateRangeAsync_Throw_If_Cancellation()
+        public override async Task UpdateRangeAsync_By_Entity_Throw_If_Cancellation()
         {
             var repository = CreateRepository();
             var cancellationToken = CreateCancellationToken();
@@ -521,7 +555,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact]
-        public override async Task DeleteAsync_Throw_If_Cancellation()
+        public override async Task DeleteAsync_By_Entity_Throw_If_Cancellation()
         {
             var repository = CreateRepository();
             var cancellationToken = CreateCancellationToken();
@@ -623,6 +657,56 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         private IEntityRepository<ProductTc, long, string> CreateRepository()
         {
             return new ProductTcReporsitory(_dbContext);
+        }
+
+        public override void Update_By_Entity_If_Param_Is_Correct_Then_Ok()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task UpdateAsync_By_Entity_If_Param_Is_Correct_Then_Ok()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task UpdateAsync_By_Entity_Throw_If_Cancellation()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task UpdateRangeAsync_By_Key_Throw_If_Cancellation()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task DeleteAsync_By_Key_Throw_If_Cancellation()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Delete_By_Entity_If_Param_Is_Correct_Then_Ok()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task DeleteAsync_By_Entity_If_Param_Is_Correct_Then_Ok()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void DeleteRange_By_Entities_If_Param_Is_Correct_Then_Ok()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task DeleteRangeAsync_By_Entities_If_Param_Is_Correct_Then_Ok()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task DeleteRangeAsync_By_Entities_Throw_If_Cancellation()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

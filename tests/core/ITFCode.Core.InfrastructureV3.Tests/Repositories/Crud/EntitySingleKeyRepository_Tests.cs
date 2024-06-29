@@ -1,20 +1,17 @@
 ﻿using ITFCode.Core.Common.Tests.Entities;
 using ITFCode.Core.Common.Tests.TestKit;
-using ITFCode.Core.Domain.Entities.Base;
-using ITFCode.Core.Domain.Entities.Base.Interfaces;
 using ITFCode.Core.InfrastructureV3.Repositories.Crud.Interfaces;
 using ITFCode.Core.InfrastructureV3.Tests.TestKit.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq.Expressions;
 
 namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
 {
     public class EntitySingleKeyRepository_Tests : EntityBaseRepository_Tests
     {
-        #region Tests: Get(TKey key)
+        #region Tests: Get, GetAsync, GetMany & GetManyAsync
 
-        [Fact]
+        [Fact] // Get(TKey key)
         public override void Get_If_Param_Is_Correct_Then_Ok()
         {
             AddTestingData();
@@ -28,11 +25,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             Assert.Equal(EntityState.Detached, _dbContext.Entry(user).State);
         }
 
-        #endregion
-
-        #region Tests: GetAsync(TKey key, CancellationToken cancellationToken = default)
-
-        [Fact]
+        [Fact] // GetAsync(TKey key, CancellationToken cancellationToken = default)
         public override async Task GetAsync_If_Param_Is_Correct_Then_Ok()
         {
             await AddTestingDataAsync();
@@ -47,7 +40,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             Assert.Equal(EntityState.Detached, _dbContext.Entry(user).State);
         }
 
-        [Fact]
+        [Fact] // GetAsync(TKey key, CancellationToken cancellationToken = default)
         public override async Task GetAsync_Throw_If_Cancellation()
         {
             var repository = CreateRepository();
@@ -57,11 +50,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
                 () => repository.GetAsync(DefaultData.UserAdmin.Key, cancellationToken: cancellationToken));
         }
 
-        #endregion
-
-        #region Tests: GetMany(IEnumerable<TKey> keys)
-
-        [Fact]
+        [Fact] // GetMany(IEnumerable<TKey> keys)
         public override void GetMany_If_Param_Is_Correct_Then_Ok()
         {
             AddTestingData();
@@ -79,11 +68,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             Assert.True(users.All(u => _dbContext.Entry(u).State == EntityState.Detached));
         }
 
-        #endregion
-
-        #region Tests: GetManyAsync(IEnumerable<TKey> keys, CancellationToken cancellationToken = default)
-
-        [Fact]
+        [Fact] // GetManyAsync(IEnumerable<TKey> keys, CancellationToken cancellationToken = default)
         public override async Task GetManyAsync_If_Param_Is_Correct_Then_Ok()
         {
             await AddTestingDataAsync();
@@ -101,7 +86,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             Assert.True(users.All(u => _dbContext.Entry(u).State == EntityState.Detached));
         }
 
-        [Fact]
+        [Fact] // GetManyAsync(IEnumerable<TKey> keys, CancellationToken cancellationToken = default)
         public override async Task GetManyAsync_Throw_If_Cancellation()
         {
             var repository = CreateRepository();
@@ -115,9 +100,9 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
 
         #endregion
 
-        #region Tests: Insert(TEntity entity)
+        #region Tests: Insert, InsertAsync, InsertRange & InsertRangeAsync
 
-        [Fact]
+        [Fact] // Insert(TEntity entity)
         public override void Insert_If_Param_Is_Correct_Then_Ok()
         {
             var user = DefaultData.UserAdmin;
@@ -139,11 +124,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             Assert.Equal(EntityState.Detached, _dbContext.Entry(user).State);
         }
 
-        #endregion
-
-        #region Tests: InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
-
-        [Fact]
+        [Fact] // InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
         public override async Task InsertAsync_If_Param_Is_Correct_Then_Ok()
         {
             var user = DefaultData.UserAdmin;
@@ -165,7 +146,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             Assert.Equal(EntityState.Detached, _dbContext.Entry(user).State);
         }
 
-        [Fact]
+        [Fact] // InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
         public override async Task InsertAsync_Throw_If_Cancellation()
         {
             var repository = CreateRepository();
@@ -176,11 +157,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
                 () => repository.InsertAsync(user, cancellationToken: cancellationToken));
         }
 
-        #endregion
-
-        #region Tests: InsertRange(IEnumerable<TEntity> entities)
-
-        [Fact]
+        [Fact] // InsertRange(IEnumerable<TEntity> entities)
         public override void InsertRange_If_Param_Is_Correct_Then_Ok()
         {
             var userAdmin = DefaultData.UserAdmin;
@@ -195,24 +172,18 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
 
             Assert.Equal(EntityState.Added, _dbContext.Entry(userAdmin).State);
             Assert.Equal(EntityState.Added, _dbContext.Entry(userManager).State);
-
             Assert.Null(UserSet.FirstOrDefault(predicate1));
             Assert.Null(UserSet.FirstOrDefault(predicate2));
 
-            repository.Commit();
+            Assert.Equal(2, repository.Commit());
 
             Assert.Equal(EntityState.Detached, _dbContext.Entry(userAdmin).State);
             Assert.Equal(EntityState.Detached, _dbContext.Entry(userManager).State);
-
             Assert.NotNull(UserSet.FirstOrDefault(predicate1));
             Assert.NotNull(UserSet.FirstOrDefault(predicate2));
         }
 
-        #endregion
-
-        #region Tests: InsertRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
-
-        [Fact]
+        [Fact] // InsertRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
         public override async Task InsertRangeAsync_If_Param_Is_Correct_Then_Ok()
         {
             var userAdmin = DefaultData.UserAdmin;
@@ -227,20 +198,18 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
 
             Assert.Equal(EntityState.Added, _dbContext.Entry(userAdmin).State);
             Assert.Equal(EntityState.Added, _dbContext.Entry(userManager).State);
-
             Assert.Null(await UserSet.FirstOrDefaultAsync(predicate1));
             Assert.Null(await UserSet.FirstOrDefaultAsync(predicate2));
 
-            repository.Commit();
+            Assert.Equal(2, await repository.CommitAsync());
 
             Assert.Equal(EntityState.Detached, _dbContext.Entry(userAdmin).State);
             Assert.Equal(EntityState.Detached, _dbContext.Entry(userManager).State);
-
             Assert.NotNull(await UserSet.FirstOrDefaultAsync(predicate1));
             Assert.NotNull(await UserSet.FirstOrDefaultAsync(predicate2));
         }
 
-        [Fact]
+        [Fact] // InsertRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
         public override async Task InsertRangeAsync_Throw_If_Cancellation()
         {
             var repository = CreateRepository();
@@ -288,6 +257,40 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
 
         #endregion
 
+        #region Tests: Update(TEntity entity)
+
+        [Fact]
+        public override void Update_By_Entity_If_Param_Is_Correct_Then_Ok()
+        {
+            AddTestingData();
+
+            Expression<Func<UserTc, bool>> predicate = x => x.Id == DefaultData.UserAdmin.Id;
+            var userAdmin = UserSet.AsNoTracking().FirstOrDefault(predicate);
+            Assert.NotNull(userAdmin);
+
+            var newFirstName = $"New_{userAdmin.FirstName}";
+
+            var repository = CreateRepository();
+
+            repository.Update(userAdmin.Id, x => x.FirstName = newFirstName);
+
+            Assert.Equal(EntityState.Detached, _dbContext.Entry(userAdmin).State);
+
+            var userAdminBefore = UserSet.AsNoTracking().FirstOrDefault(predicate);
+            
+            Assert.NotNull(userAdminBefore);
+            Assert.NotEqual(newFirstName, userAdminBefore.FirstName);
+            Assert.Equal(1, repository.Commit());
+
+            var userAdminAfter = UserSet.AsNoTracking().FirstOrDefault(predicate);
+
+            Assert.NotNull(userAdminAfter);
+            Assert.Equal(newFirstName, userAdminAfter.FirstName);
+            Assert.Equal(EntityState.Detached, _dbContext.Entry(userAdmin).State);
+        }
+
+        #endregion
+
         #region Tests: UpdateAsync(TKey key, Action<TEntity> updater, CancellationToken cancellationToken = default)
 
         [Fact]
@@ -322,7 +325,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact]
-        public override async Task UpdateAsync_Throw_If_Cancellation()
+        public override async Task UpdateAsync_By_Key_Throw_If_Cancellation()
         {
             var repository = CreateRepository();
             var cancellationToken = CreateCancellationToken();
@@ -333,6 +336,46 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
 
             await Assert.ThrowsAsync<OperationCanceledException>(
                 () => repository.UpdateAsync(user.Id, x => x.FirstName = "NewFirstName", cancellationToken: cancellationToken));
+        }
+
+        #endregion
+
+        #region  Tests: UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
+
+        [Fact]
+        public override Task UpdateAsync_By_Entity_If_Param_Is_Correct_Then_Ok()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public override async Task UpdateAsync_By_Entity_Throw_If_Cancellation()
+        {
+            await AddTestingDataAsync();
+
+            Expression<Func<UserTc, bool>> predicate = x => x.Id == DefaultData.UserAdmin.Id;
+            var userAdmin = await UserSet.AsNoTracking().FirstOrDefaultAsync(predicate);
+            Assert.NotNull(userAdmin);
+
+            var newFirstName = $"New_{userAdmin.FirstName}";
+
+            var repository = CreateRepository();
+
+            await repository.UpdateAsync(userAdmin.Id, x => x.FirstName = newFirstName);
+
+            Assert.Equal(EntityState.Detached, _dbContext.Entry(userAdmin).State);
+
+            var userAdminBefore = UserSet.AsNoTracking().FirstOrDefault(predicate);
+
+            Assert.NotNull(userAdminBefore);
+            Assert.NotEqual(newFirstName, userAdminBefore.FirstName);
+            Assert.Equal(1,await  repository.CommitAsync());
+
+            var userAdminAfter = await UserSet.AsNoTracking().FirstOrDefaultAsync(predicate);
+
+            Assert.NotNull(userAdminAfter);
+            Assert.Equal(newFirstName, userAdminAfter.FirstName);
+            Assert.Equal(EntityState.Detached, _dbContext.Entry(userAdmin).State);
         }
 
         #endregion
@@ -388,7 +431,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact]
-        public override void UpdateRange_If_Params_Are_Correct_Then_Ok()
+        public override void UpdateRange_By_Enities_If_Params_Are_Correct_Then_Ok()
         {
             AddTestingData();
 
@@ -481,7 +524,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact]
-        public override async Task UpdateRangeAsync_If_Params_Are_Correct_Then_Ok()
+        public override async Task UpdateRangeAsync_By_Entities_If_Params_Are_Correct_Then_Ok()
         {
             await AddTestingDataAsync();
 
@@ -523,7 +566,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact]
-        public override async Task UpdateRangeAsync_Throw_If_Cancellation()
+        public override async Task UpdateRangeAsync_By_Entity_Throw_If_Cancellation()
         {
             var repository = CreateRepository();
             var cancellationToken = CreateCancellationToken();
@@ -587,7 +630,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             Assert.Null(userAfter);
         }
 
-        public override Task DeleteAsync_Throw_If_Cancellation()
+        public override Task DeleteAsync_By_Entity_Throw_If_Cancellation()
         {
             throw new NotImplementedException();
         }
@@ -677,6 +720,49 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         private IEntityRepository<UserTc, int> CreateRepository()
         {
             return new UserTcReporsitory(_dbContext);
+        }
+
+
+        [Fact]
+        public override Task UpdateRangeAsync_By_Key_Throw_If_Cancellation()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public override Task DeleteAsync_By_Key_Throw_If_Cancellation()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public override void Delete_By_Entity_If_Param_Is_Correct_Then_Ok()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public override Task DeleteAsync_By_Entity_If_Param_Is_Correct_Then_Ok()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public override void DeleteRange_By_Entities_If_Param_Is_Correct_Then_Ok()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public override Task DeleteRangeAsync_By_Entities_If_Param_Is_Correct_Then_Ok()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public override Task DeleteRangeAsync_By_Entities_Throw_If_Cancellation()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

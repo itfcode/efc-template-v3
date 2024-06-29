@@ -8,41 +8,37 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Readonly
 {
     public class EntitySingleKeyReadonlyRepository_Test : EntityReadonlyBaseRepository_Tests
     {
-        #region Tests: Get(TKey key, bool asNoTracking = true)
+        #region Tests: Get, GetAsync, GetMany & GetManyAsync
 
-        [Fact]
+        [Fact] // Get(TKey key, bool asNoTracking = true)
         public override void Get_If_Param_Is_Correct_Then_Ok()
         {
             AddTestingData();
 
-            var userId = DefaultData.UserAdmin.Id;
+            var key = DefaultData.UserAdmin.Id;
             var repository = CreateRepository();
-            var entity = repository.Get(userId);
+            var entity = repository.Get(key);
 
             Assert.NotNull(entity);
-            Assert.Equal(userId, entity.Key);
+            Assert.Equal(key, entity.Key);
             Assert.Equal(EntityState.Detached, _dbContext.Entry(entity).State);
         }
 
-        #endregion
-
-        #region Tests: GetAsync(TKey key, bool asNoTracking = true, CancellationToken cancellationToken = default)
-
-        [Fact]
+        [Fact] // GetAsync(TKey key, bool asNoTracking = true, CancellationToken cancellationToken = default)
         public override async Task GetAsync_If_Param_Is_Correct_Then_Ok()
         {
             AddTestingData();
 
-            var userId = DefaultData.UserAdmin.Id;
+            var key = DefaultData.UserAdmin.Id;
             var repository = CreateRepository();
-            var enity = await repository.GetAsync(userId);
+            var enity = await repository.GetAsync(key);
 
             Assert.NotNull(enity);
-            Assert.Equal(userId, enity.Key);
+            Assert.Equal(key, enity.Key);
             Assert.Equal(EntityState.Detached, _dbContext.Entry(enity).State);
         }
 
-        [Fact]
+        [Fact] // GetAsync(TKey key, bool asNoTracking = true, CancellationToken cancellationToken = default)
         public override async Task GetAsync_Throw_If_Cancellation()
         {
             var repository = CreateRepository();
@@ -52,19 +48,16 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Readonly
                 () => repository.GetAsync(DefaultData.UserAdmin.Key, cancellationToken: cancellationToken));
         }
 
-        #endregion
-
-        #region Tests: GetMany(IEnumerable<TKey> keys, bool asNoTracking = true)
-
-        [Fact]
+        [Fact] // GetMany(IEnumerable<TKey> keys, bool asNoTracking = true)
         public override void GetMany_If_Param_Is_Correct_Then_Ok()
         {
             AddTestingData();
 
-            var userId1 = DefaultData.UserAdmin.Id;
-            var userId2 = DefaultData.UserManager.Id;
+            var key1 = DefaultData.UserAdmin.Id;
+            var key2 = DefaultData.UserManager.Id;
             var repository = CreateRepository();
-            IEnumerable<int> keys = [userId1, userId2];
+            IEnumerable<int> keys = [key1, key2];
+
             var entities = repository.GetMany(keys);
 
             Assert.NotEmpty(entities);
@@ -73,19 +66,16 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Readonly
             Assert.True(keys.All(k => entities.SingleOrDefault(u => u.Id == k) is not null));
         }
 
-        #endregion
-
-        #region Tests: GetManyAsync(IEnumerable<TKey> keys, bool asNoTracking = true, CancellationToken cancellationToken = default)
-
-        [Fact]
+        [Fact] // GetManyAsync(IEnumerable<TKey> keys, bool asNoTracking = true, CancellationToken cancellationToken = default)
         public override async Task GetManyAsync_If_Param_Is_Correct_Then_Ok()
         {
             await AddTestingDataAsync();
 
-            var userId1 = DefaultData.UserAdmin.Id;
-            var userId2 = DefaultData.UserManager.Id;
+            var key1 = DefaultData.UserAdmin.Id;
+            var key2 = DefaultData.UserManager.Id;
             var repository = CreateRepository();
-            IEnumerable<int> keys = [userId1, userId2];
+            IEnumerable<int> keys = [key1, key2];
+
             var entities = await repository.GetManyAsync(keys);
 
             Assert.NotEmpty(entities);
@@ -94,7 +84,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Readonly
             Assert.True(keys.All(k => entities.SingleOrDefault(u => u.Id == k) is not null));
         }
 
-        [Fact]
+        [Fact] // GetManyAsync(IEnumerable<TKey> keys, bool asNoTracking = true, CancellationToken cancellationToken = default)
         public override async Task GetManyAsync_Throw_If_Cancellation()
         {
             var repository = CreateRepository();
