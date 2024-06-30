@@ -38,7 +38,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
 
         public abstract void UpdateRange_By_Enities_If_Params_Are_Correct_Then_Ok();
         public abstract Task UpdateRangeAsync_By_Entities_If_Params_Are_Correct_Then_Ok();
-        public abstract Task UpdateRangeAsync_By_Entity_Throw_If_Cancellation();
+        public abstract Task UpdateRangeAsync_By_Entities_Throw_If_Cancellation();
 
         #endregion
 

@@ -483,7 +483,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact]
-        public override async Task UpdateRangeAsync_By_Entity_Throw_If_Cancellation()
+        public override async Task UpdateRangeAsync_By_Entities_Throw_If_Cancellation()
         {
             var repository = CreateRepository();
             var cancellationToken = CreateCancellationToken();
