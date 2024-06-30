@@ -225,7 +225,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: Update, UpdateAsync, UpdateMany & UpdateManyAsync
 
         [Fact] // Update(TKey key, Action<TEntity> updater)
-        public override void Update_By_Key_If_Param_Is_Correct_Then_Ok()
+        public override void Update_By_Key_Ok()
         {
             AddTestingData();
 
@@ -256,7 +256,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact] // UpdateAsync(TKey key, Action<TEntity> updater, CancellationToken cancellationToken = default)
-        public override async Task UpdateAsync_By_Key_If_Param_Is_Correct_Then_Ok()
+        public override async Task UpdateAsync_By_Key_Ok()
         {
             await AddTestingDataAsync();
 
@@ -298,7 +298,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
 
 
         [Fact] // Update(TEntity entity)
-        public override void Update_By_Entity_If_Param_Is_Correct_Then_Ok()
+        public override void Update_By_Entity_Ok()
         {
             AddTestingData();
 
@@ -328,7 +328,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact] // UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
-        public override async Task UpdateAsync_By_Entity_If_Param_Is_Correct_Then_Ok()
+        public override async Task UpdateAsync_By_Entity_Ok()
         {
             await AddTestingDataAsync();
 
@@ -370,7 +370,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
 
 
         [Fact] // UpdateRange(IEnumerable<TKey> keys, Action<TEntity> updater)
-        public override void UpdateRange_By_Keys_If_Param_Is_Correct_Then_Ok()
+        public override void UpdateRange_By_Keys_Ok()
         {
             AddTestingData();
 
@@ -418,7 +418,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact] // UpdateRangeAsync(IEnumerable<TKey> keys, Action<TEntity> updater, CancellationToken cancellationToken = default)
-        public override async Task UpdateRangeAsync_By_Keys_If_Param_Is_Correct_Then_Ok()
+        public override async Task UpdateRangeAsync_By_Keys_Ok()
         {
             await AddTestingDataAsync();
 
@@ -478,7 +478,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
 
 
         [Fact] // UpdateRange(IEnumerable<TEntity> entities)
-        public override void UpdateRange_By_Enities_If_Params_Are_Correct_Then_Ok()
+        public override void UpdateRange_By_Enities_Ok()
         {
             AddTestingData();
 
@@ -520,7 +520,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact] // UpdateRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
-        public override async Task UpdateRangeAsync_By_Entities_If_Params_Are_Correct_Then_Ok()
+        public override async Task UpdateRangeAsync_By_Entities_Ok()
         {
             await AddTestingDataAsync();
 

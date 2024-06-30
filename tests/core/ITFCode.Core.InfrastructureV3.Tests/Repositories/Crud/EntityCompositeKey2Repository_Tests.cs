@@ -9,9 +9,9 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
 {
     public class EntityCompositeKey2Repository_Tests : EntityBaseRepository_Tests
     {
-        #region Tests: Get((TKey1, TKey2) key)
+        #region Tests: Get, GetAsync, GetMany & GetManyAsync
 
-        [Fact]
+        [Fact] // Get((TKey1, TKey2) key)
         public override void Get_If_Param_Is_Correct_Then_Ok()
         {
             AddTestingData();
@@ -27,11 +27,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             Assert.Equal(EntityState.Detached, _dbContext.Entry(product).State);
         }
 
-        #endregion
-
-        #region Tests: GetAsync((TKey1, TKey2) key, CancellationToken cancellationToken = default)
-
-        [Fact]
+        [Fact] // GetAsync((TKey1, TKey2) key, CancellationToken cancellationToken = default)
         public override async Task GetAsync_If_Param_Is_Correct_Then_Ok()
         {
             await AddTestingDataAsync();
@@ -47,7 +43,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             Assert.Equal(EntityState.Detached, _dbContext.Entry(product).State);
         }
 
-        [Fact]
+        [Fact] // GetAsync((TKey1, TKey2) key, CancellationToken cancellationToken = default)
         public override async Task GetAsync_Throw_If_Cancellation()
         {
             var repository = CreateRepository();
@@ -57,11 +53,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
                 () => repository.GetAsync((1, "key_value"), cancellationToken: cancellationToken));
         }
 
-        #endregion
-
-        #region Tests: GetMany(IEnumerable<(TKey1, TKey2)> keys)
-
-        [Fact]
+        [Fact] // GetMany(IEnumerable<(TKey1, TKey2)> keys)
         public override void GetMany_If_Param_Is_Correct_Then_Ok()
         {
             AddTestingData();
@@ -80,11 +72,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             Assert.True(products.All(p => EntityState.Detached == _dbContext.Entry(p).State));
         }
 
-        #endregion
-
-        #region Tests: GetManyAsync(IEnumerable<(TKey1, TKey2)> keys, CancellationToken cancellationToken = default)
-
-        [Fact]
+        [Fact] // GetManyAsync(IEnumerable<(TKey1, TKey2)> keys, CancellationToken cancellationToken = default)
         public override async Task GetManyAsync_If_Param_Is_Correct_Then_Ok()
         {
             await AddTestingDataAsync();
@@ -104,7 +92,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             Assert.True(products.All(p => EntityState.Detached == _dbContext.Entry(p).State));
         }
 
-        [Fact]
+        [Fact] // GetManyAsync(IEnumerable<(TKey1, TKey2)> keys, CancellationToken cancellationToken = default)
         public override async Task GetManyAsync_Throw_If_Cancellation()
         {
             var repository = CreateRepository();
@@ -121,9 +109,9 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
 
         #endregion
 
-        #region Tests: Insert(TEntity entity)
+        #region Tests: Insert, InsertAsync, InsertRange & InsertRangeAsync
 
-        [Fact]
+        [Fact] // Insert(TEntity entity)
         public override void Insert_If_Param_Is_Correct_Then_Ok()
         {
             var product = DefaultData.ProductA;
@@ -147,11 +135,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             Assert.Equal(EntityState.Detached, _dbContext.Entry(product).State);
         }
 
-        #endregion
-
-        #region Tests: InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
-
-        [Fact]
+        [Fact] // InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
         public override async Task InsertAsync_If_Param_Is_Correct_Then_Ok()
         {
             var product = DefaultData.ProductA;
@@ -175,7 +159,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             Assert.Equal(EntityState.Detached, _dbContext.Entry(product).State);
         }
 
-        [Fact]
+        [Fact] // InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
         public override async Task InsertAsync_Throw_If_Cancellation()
         {
             var repository = CreateRepository();
@@ -186,11 +170,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
                 () => repository.InsertAsync(product, cancellationToken: cancellationToken));
         }
 
-        #endregion
-
-        #region Tests: InsertRange(IEnumerable<TEntity> entities)
-
-        [Fact]
+        [Fact] // InsertRange(IEnumerable<TEntity> entities)
         public override void InsertRange_If_Param_Is_Correct_Then_Ok()
         {
             var product = DefaultData.ProductA;
@@ -214,11 +194,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             Assert.Equal(EntityState.Detached, _dbContext.Entry(product).State);
         }
 
-        #endregion
-
-        #region Tests: InsertRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
-
-        [Fact]
+        [Fact] // InsertRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
         public override async Task InsertRangeAsync_If_Param_Is_Correct_Then_Ok()
         {
             var product = DefaultData.ProductA;
@@ -242,7 +218,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             Assert.Equal(EntityState.Detached, _dbContext.Entry(product).State);
         }
 
-        [Fact]
+        [Fact] // InsertRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
         public override async Task InsertRangeAsync_Throw_If_Cancellation()
         {
             var repository = CreateRepository();
@@ -255,10 +231,10 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
 
         #endregion
 
-        #region Tests: Update((TKey1, TKey2) key, Action<TEntity> updater)
+        #region Tests: Update, UpdateAsync, UpdateMany & UpdateManyAsync
 
-        [Fact]
-        public override void Update_By_Key_If_Param_Is_Correct_Then_Ok()
+        [Fact] // Update((TKey1, TKey2) key, Action<TEntity> updater)
+        public override void Update_By_Key_Ok()
         {
             AddTestingData();
 
@@ -288,12 +264,8 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             Assert.Equal(EntityState.Detached, _dbContext.Entry(product).State);
         }
 
-        #endregion
-
-        #region Tests: UpdateAsync((TKey1, TKey2) key, Action<TEntity> updater, CancellationToken cancellationToken = default)
-
-        [Fact]
-        public override async Task UpdateAsync_By_Key_If_Param_Is_Correct_Then_Ok()
+        [Fact] // UpdateAsync((TKey1, TKey2) key, Action<TEntity> updater, CancellationToken cancellationToken = default)
+        public override async Task UpdateAsync_By_Key_Ok()
         {
             await AddTestingDataAsync();
 
@@ -323,12 +295,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             Assert.Equal(EntityState.Detached, _dbContext.Entry(product).State);
         }
 
-        public override void UpdateRange_By_Enities_If_Params_Are_Correct_Then_Ok()
-        {
-            throw new NotImplementedException();
-        }
-
-        [Fact]
+        [Fact] // UpdateAsync((TKey1, TKey2) key, Action<TEntity> updater, CancellationToken cancellationToken = default)
         public override async Task UpdateAsync_By_Key_Throw_If_Cancellation()
         {
             var repository = CreateRepository();
@@ -338,6 +305,26 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
 
             await Assert.ThrowsAsync<OperationCanceledException>(
                 () => repository.UpdateAsync(key, x => x.Name = "New Name", cancellationToken: cancellationToken));
+        }
+
+
+        [Fact] // Update(TEntity entity)
+        public override void Update_By_Entity_Ok()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact] // UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
+        public override Task UpdateAsync_By_Entity_Ok()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact] // UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
+        public override async Task UpdateAsync_By_Entity_Throw_If_Cancellation()
+        {
+            var repository = CreateRepository();
+            var cancellationToken = CreateCancellationToken();
 
             var product = DefaultData.ProductA;
 
@@ -345,12 +332,9 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
                 () => repository.UpdateAsync(product, cancellationToken: cancellationToken));
         }
 
-        #endregion
 
-        #region Tests: UpdateRange(IEnumerable<(TKey1, TKey2)> keys, Action<TEntity> updater)
-
-        [Fact]
-        public override void UpdateRange_By_Keys_If_Param_Is_Correct_Then_Ok()
+        [Fact] // UpdateRange(IEnumerable<(TKey1, TKey2)> keys, Action<TEntity> updater)
+        public override void UpdateRange_By_Keys_Ok()
         {
             AddTestingData();
 
@@ -392,12 +376,8 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             Assert.Equal(EntityState.Detached, _dbContext.Entry(product2).State);
         }
 
-        #endregion
-
-        #region Tests: UpdateRangeAsync(IEnumerable<(TKey1, TKey2)> keys, Action<TEntity> updater, CancellationToken cancellationToken = default) 
-
-        [Fact]
-        public override async Task UpdateRangeAsync_By_Keys_If_Param_Is_Correct_Then_Ok()
+        [Fact] // UpdateRangeAsync(IEnumerable<(TKey1, TKey2)> keys, Action<TEntity> updater, CancellationToken cancellationToken = default) 
+        public override async Task UpdateRangeAsync_By_Keys_Ok()
         {
             await AddTestingDataAsync();
 
@@ -439,8 +419,21 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             Assert.Equal(EntityState.Detached, _dbContext.Entry(product2).State);
         }
 
-        [Fact]
-        public override async Task UpdateRangeAsync_By_Entities_If_Params_Are_Correct_Then_Ok()
+        [Fact] // UpdateRangeAsync(IEnumerable<(TKey1, TKey2)> keys, Action<TEntity> updater, CancellationToken cancellationToken = default) 
+        public override Task UpdateRangeAsync_By_Key_Throw_If_Cancellation()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        [Fact] // UpdateRange(IEnumerable<TEntity> entities)
+        public override void UpdateRange_By_Enities_Ok()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact] // UpdateRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
+        public override async Task UpdateRangeAsync_By_Entities_Ok()
         {
             await AddTestingDataAsync();
 
@@ -482,7 +475,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             Assert.Equal(EntityState.Detached, _dbContext.Entry(product2).State);
         }
 
-        [Fact]
+        [Fact] // UpdateRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
         public override async Task UpdateRangeAsync_By_Entities_Throw_If_Cancellation()
         {
             var repository = CreateRepository();
@@ -500,11 +493,12 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
                 () => repository.UpdateRangeAsync(products, cancellationToken: cancellationToken));
         }
 
+
         #endregion
 
-        #region Tests: Delete((TKey1, TKey2) key)
+        #region Tests: Delete, DeleteAsync, DeleteMany & DeleteManyAsync
 
-        [Fact]
+        [Fact] // Delete((TKey1, TKey2) key)
         public override void Delete_By_Key_If_Param_Is_Correct_Then_Ok()
         {
             AddTestingData();
@@ -527,11 +521,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             Assert.Null(productAfter);
         }
 
-        #endregion
-
-        #region Tests: DeleteAsync((TKey1, TKey2) key, CancellationToken cancellationToken = default)
-
-        [Fact]
+        [Fact] // DeleteAsync((TKey1, TKey2) key, CancellationToken cancellationToken = default)
         public override async Task DeleteAsync_By_Key_If_Param_Is_Correct_Then_Ok()
         {
             await AddTestingDataAsync();
@@ -564,11 +554,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
                 () => repository.DeleteAsync(DefaultData.ProductA, cancellationToken: cancellationToken));
         }
 
-        #endregion
-
-        #region Tests: DeleteRange(IEnumerable<(TKey1, TKey2)> keys) 
-
-        [Fact]
+        [Fact] // DeleteRange(IEnumerable<(TKey1, TKey2)> keys) 
         public override void DeleteRange_By_Keys_If_Param_Is_Correct_Then_Ok()
         {
             AddTestingData();
@@ -598,11 +584,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             Assert.Null(productAfter2);
         }
 
-        #endregion
-
-        #region Tests: DeleteRangeAsync(IEnumerable<(TKey1, TKey2)> keys, CancellationToken cancellationToken = default)
-
-        [Fact]
+        [Fact] // DeleteRangeAsync(IEnumerable<(TKey1, TKey2)> keys, CancellationToken cancellationToken = default)
         public override async Task DeleteRangeAsync_By_Keys_If_Param_Is_Correct_Then_Ok()
         {
             await AddTestingDataAsync();
@@ -650,39 +632,6 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
                 () => repository.DeleteRangeAsync(keys, cancellationToken: cancellationToken));
         }
 
-        #endregion
-
-        #region Private Methods 
-
-        private IEntityRepository<ProductTc, long, string> CreateRepository()
-        {
-            return new ProductTcReporsitory(_dbContext);
-        }
-
-        [Fact]
-        public override void Update_By_Entity_If_Param_Is_Correct_Then_Ok()
-        {
-            throw new NotImplementedException();
-        }
-
-        [Fact]
-        public override Task UpdateAsync_By_Entity_If_Param_Is_Correct_Then_Ok()
-        {
-            throw new NotImplementedException();
-        }
-
-        [Fact]
-        public override Task UpdateAsync_By_Entity_Throw_If_Cancellation()
-        {
-            throw new NotImplementedException();
-        }
-
-        [Fact]
-        public override Task UpdateRangeAsync_By_Key_Throw_If_Cancellation()
-        {
-            throw new NotImplementedException();
-        }
-
         [Fact]
         public override Task DeleteAsync_By_Key_Throw_If_Cancellation()
         {
@@ -717,6 +666,15 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         public override Task DeleteRangeAsync_By_Entities_Throw_If_Cancellation()
         {
             throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region Private Methods 
+
+        private IEntityRepository<ProductTc, long, string> CreateRepository()
+        {
+            return new ProductTcReporsitory(_dbContext);
         }
 
         #endregion

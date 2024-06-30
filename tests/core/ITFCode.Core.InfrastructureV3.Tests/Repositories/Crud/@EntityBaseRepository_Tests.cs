@@ -24,20 +24,20 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
 
         #region Tests: Update, UpdateAsync, UpdateMany & UpdateManyAsync
 
-        public abstract void Update_By_Key_If_Param_Is_Correct_Then_Ok();
-        public abstract Task UpdateAsync_By_Key_If_Param_Is_Correct_Then_Ok();
+        public abstract void Update_By_Key_Ok();
+        public abstract Task UpdateAsync_By_Key_Ok();
         public abstract Task UpdateAsync_By_Key_Throw_If_Cancellation();
 
-        public abstract void Update_By_Entity_If_Param_Is_Correct_Then_Ok();
-        public abstract Task UpdateAsync_By_Entity_If_Param_Is_Correct_Then_Ok();
+        public abstract void Update_By_Entity_Ok();
+        public abstract Task UpdateAsync_By_Entity_Ok();
         public abstract Task UpdateAsync_By_Entity_Throw_If_Cancellation();
 
-        public abstract void UpdateRange_By_Keys_If_Param_Is_Correct_Then_Ok();
-        public abstract Task UpdateRangeAsync_By_Keys_If_Param_Is_Correct_Then_Ok();
+        public abstract void UpdateRange_By_Keys_Ok();
+        public abstract Task UpdateRangeAsync_By_Keys_Ok();
         public abstract Task UpdateRangeAsync_By_Key_Throw_If_Cancellation();
 
-        public abstract void UpdateRange_By_Enities_If_Params_Are_Correct_Then_Ok();
-        public abstract Task UpdateRangeAsync_By_Entities_If_Params_Are_Correct_Then_Ok();
+        public abstract void UpdateRange_By_Enities_Ok();
+        public abstract Task UpdateRangeAsync_By_Entities_Ok();
         public abstract Task UpdateRangeAsync_By_Entities_Throw_If_Cancellation();
 
         #endregion

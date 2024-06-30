@@ -265,7 +265,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: Update((TKey1, TKey2, TKey3) key, Action<TEntity> updater, bool shouldSave = false)
 
         [Fact]
-        public override void Update_By_Key_If_Param_Is_Correct_Then_Ok()
+        public override void Update_By_Key_Ok()
         {
             AddTestingData();
 
@@ -300,7 +300,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: UpdateAsync((TKey1, TKey2, TKey3) key, Action<TEntity> updater, bool shouldSave = false, CancellationToken cancellationToken = default)
 
         [Fact]
-        public override async Task UpdateAsync_By_Key_If_Param_Is_Correct_Then_Ok()
+        public override async Task UpdateAsync_By_Key_Ok()
         {
             await AddTestingDataAsync();
 
@@ -331,7 +331,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact]
-        public override void UpdateRange_By_Enities_If_Params_Are_Correct_Then_Ok()
+        public override void UpdateRange_By_Enities_Ok()
         {
             AddTestingData();
 
@@ -396,7 +396,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: UpdateRange(IEnumerable<(TKey1, TKey2, TKey3)> keys, Action<TEntity> updater, bool shouldSave = false)
 
         [Fact]
-        public override void UpdateRange_By_Keys_If_Param_Is_Correct_Then_Ok()
+        public override void UpdateRange_By_Keys_Ok()
         {
             AddTestingData();
 
@@ -444,7 +444,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: UpdateRangeAsync(IEnumerable<(TKey1, TKey2, TKey3)> keys, Action<TEntity> updater, bool shouldSave = false, CancellationToken cancellationToken = default)
 
         [Fact]
-        public override async Task UpdateRangeAsync_By_Keys_If_Param_Is_Correct_Then_Ok()
+        public override async Task UpdateRangeAsync_By_Keys_Ok()
         {
             AddTestingData();
 
@@ -488,7 +488,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact]
-        public override async Task UpdateRangeAsync_By_Entities_If_Params_Are_Correct_Then_Ok()
+        public override async Task UpdateRangeAsync_By_Entities_Ok()
         {
             throw new NotImplementedException();
         }
@@ -669,13 +669,13 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact]
-        public override void Update_By_Entity_If_Param_Is_Correct_Then_Ok()
+        public override void Update_By_Entity_Ok()
         {
             throw new NotImplementedException();
         }
 
         [Fact]
-        public override Task UpdateAsync_By_Entity_If_Param_Is_Correct_Then_Ok()
+        public override Task UpdateAsync_By_Entity_Ok()
         {
             throw new NotImplementedException();
         }
