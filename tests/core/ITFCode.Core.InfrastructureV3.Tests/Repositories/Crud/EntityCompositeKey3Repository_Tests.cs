@@ -487,6 +487,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             Assert.Equal(EntityState.Detached, _dbContext.Entry(order2).State);
         }
 
+        [Fact]
         public override async Task UpdateRangeAsync_By_Entities_If_Params_Are_Correct_Then_Ok()
         {
             throw new NotImplementedException();
@@ -667,51 +668,61 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             return new ProductOrderTcReporsitory(_dbContext);
         }
 
+        [Fact]
         public override void Update_By_Entity_If_Param_Is_Correct_Then_Ok()
         {
             throw new NotImplementedException();
         }
 
+        [Fact]
         public override Task UpdateAsync_By_Entity_If_Param_Is_Correct_Then_Ok()
         {
             throw new NotImplementedException();
         }
 
+        [Fact]
         public override Task UpdateAsync_By_Entity_Throw_If_Cancellation()
         {
             throw new NotImplementedException();
         }
 
+        [Fact]
         public override Task UpdateRangeAsync_By_Key_Throw_If_Cancellation()
         {
             throw new NotImplementedException();
         }
 
+        [Fact]
         public override Task DeleteAsync_By_Key_Throw_If_Cancellation()
         {
             throw new NotImplementedException();
         }
 
+        [Fact]
         public override void Delete_By_Entity_If_Param_Is_Correct_Then_Ok()
         {
             throw new NotImplementedException();
         }
 
+        [Fact]
         public override Task DeleteAsync_By_Entity_If_Param_Is_Correct_Then_Ok()
         {
             throw new NotImplementedException();
         }
 
+        [Fact]
         public override void DeleteRange_By_Entities_If_Param_Is_Correct_Then_Ok()
         {
             throw new NotImplementedException();
         }
 
+        [Fact]
         public override Task DeleteRangeAsync_By_Entities_If_Param_Is_Correct_Then_Ok()
         {
             throw new NotImplementedException();
         }
 
+        [Fact]
         public override Task DeleteRangeAsync_By_Entities_Throw_If_Cancellation()
         {
             throw new NotImplementedException();
