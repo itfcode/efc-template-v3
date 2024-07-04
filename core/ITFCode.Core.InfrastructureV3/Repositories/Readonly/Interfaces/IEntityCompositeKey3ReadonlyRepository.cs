@@ -11,7 +11,7 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Readonly.Interfaces
         TEntity? Get((TKey1, TKey2, TKey3) key);
         Task<TEntity?> GetAsync((TKey1, TKey2, TKey3) key, CancellationToken cancellationToken = default);
 
-        IReadOnlyCollection<TEntity> GetMany(IEnumerable<(TKey1, TKey2, TKey3)> keys);
-        Task<IReadOnlyCollection<TEntity>> GetManyAsync(IEnumerable<(TKey1, TKey2, TKey3)> keys, CancellationToken cancellationToken = default);
+        IReadOnlyCollection<TEntity> GetRange(IEnumerable<(TKey1, TKey2, TKey3)> keys);
+        Task<IReadOnlyCollection<TEntity>> GetRangeAsync(IEnumerable<(TKey1, TKey2, TKey3)> keys, CancellationToken cancellationToken = default);
     }
 }

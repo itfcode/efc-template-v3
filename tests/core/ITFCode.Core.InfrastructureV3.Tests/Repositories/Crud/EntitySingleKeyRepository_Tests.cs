@@ -12,7 +12,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: Get, GetAsync, GetMany & GetManyAsync
 
         [Fact] // Get(TKey key)
-        public override void Get_If_Param_Is_Correct_Then_Ok()
+        public override void Get_Ok()
         {
             AddTestingData();
 
@@ -26,7 +26,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact] // GetAsync(TKey key, CancellationToken cancellationToken = default)
-        public override async Task GetAsync_If_Param_Is_Correct_Then_Ok()
+        public override async Task GetAsync_Ok()
         {
             await AddTestingDataAsync();
 
@@ -51,7 +51,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact] // GetMany(IEnumerable<TKey> keys)
-        public override void GetMany_If_Param_Is_Correct_Then_Ok()
+        public override void GetRange_Ok()
         {
             AddTestingData();
 
@@ -60,7 +60,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             var userManagerId = DefaultData.UserManager.Id;
             IEnumerable<int> keys = [userAdminId, userManagerId];
 
-            var users = repository.GetMany(keys);
+            var users = repository.GetRange(keys);
 
             Assert.NotEmpty(users);
             Assert.Equal(2, users.Count);
@@ -69,7 +69,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact] // GetManyAsync(IEnumerable<TKey> keys, CancellationToken cancellationToken = default)
-        public override async Task GetManyAsync_If_Param_Is_Correct_Then_Ok()
+        public override async Task GetRangeAsync_Ok()
         {
             await AddTestingDataAsync();
 
@@ -78,7 +78,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             var userManagerId = DefaultData.UserManager.Id;
             IEnumerable<int> keys = [userAdminId, userManagerId];
 
-            var users = await repository.GetManyAsync(keys);
+            var users = await repository.GetRangeAsync(keys);
 
             Assert.NotEmpty(users);
             Assert.Equal(2, users.Count);
@@ -95,7 +95,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             IEnumerable<int> keys = [DefaultData.UserAdmin.Id, DefaultData.UserManager.Id];
 
             await Assert.ThrowsAsync<OperationCanceledException>(
-                () => repository.GetManyAsync(keys, cancellationToken: cancellationToken));
+                () => repository.GetRangeAsync(keys, cancellationToken: cancellationToken));
         }
 
         #endregion

@@ -44,7 +44,7 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
             }
         }
 
-        public virtual IReadOnlyCollection<TEntity> GetMany(IEnumerable<(TKey1, TKey2)> keys)
+        public virtual IReadOnlyCollection<TEntity> GetRange(IEnumerable<(TKey1, TKey2)> keys)
         {
             try
             {
@@ -56,7 +56,7 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
             }
         }
 
-        public virtual async Task<IReadOnlyCollection<TEntity>> GetManyAsync(IEnumerable<(TKey1, TKey2)> keys, CancellationToken cancellationToken = default)
+        public virtual async Task<IReadOnlyCollection<TEntity>> GetRangeAsync(IEnumerable<(TKey1, TKey2)> keys, CancellationToken cancellationToken = default)
         {
             try
             {

@@ -31,12 +31,12 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Readonly
 
         #region Tests
 
-        public abstract void Get_If_Param_Is_Correct_Then_Ok();
-        public abstract Task GetAsync_If_Param_Is_Correct_Then_Ok();
+        public abstract void Get_Ok();
+        public abstract Task GetAsync_Ok();
         public abstract Task GetAsync_Throw_If_Cancellation();
 
-        public abstract void GetMany_If_Param_Is_Correct_Then_Ok();
-        public abstract Task GetManyAsync_If_Param_Is_Correct_Then_Ok();
+        public abstract void GetRange_Ok();
+        public abstract Task GetRangeAsync_Ok();
         public abstract Task GetManyAsync_Throw_If_Cancellation();
 
         #endregion

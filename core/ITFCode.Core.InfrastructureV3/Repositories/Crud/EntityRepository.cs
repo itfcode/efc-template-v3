@@ -1,5 +1,4 @@
-﻿using ITFCode.Core.Domain.Entities.Base;
-using ITFCode.Core.Domain.Entities.Base.Interfaces;
+﻿using ITFCode.Core.Domain.Entities.Base.Interfaces;
 using ITFCode.Core.InfrastructureV3.EfCore;
 using ITFCode.Core.InfrastructureV3.EfCore.Readers;
 using ITFCode.Core.InfrastructureV3.Repositories.Crud.Interfaces;

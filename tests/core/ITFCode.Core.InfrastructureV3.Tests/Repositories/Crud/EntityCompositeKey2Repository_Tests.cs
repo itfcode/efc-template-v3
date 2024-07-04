@@ -12,7 +12,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: Get, GetAsync, GetMany & GetManyAsync
 
         [Fact] // Get((TKey1, TKey2) key)
-        public override void Get_If_Param_Is_Correct_Then_Ok()
+        public override void Get_Ok()
         {
             AddTestingData();
 
@@ -28,7 +28,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact] // GetAsync((TKey1, TKey2) key, CancellationToken cancellationToken = default)
-        public override async Task GetAsync_If_Param_Is_Correct_Then_Ok()
+        public override async Task GetAsync_Ok()
         {
             await AddTestingDataAsync();
 
@@ -54,7 +54,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact] // GetMany(IEnumerable<(TKey1, TKey2)> keys)
-        public override void GetMany_If_Param_Is_Correct_Then_Ok()
+        public override void GetRange_Ok()
         {
             AddTestingData();
 
@@ -64,7 +64,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
 
             IEnumerable<(long, string)> keys = [key1, key2];
 
-            var products = repository.GetMany(keys);
+            var products = repository.GetRange(keys);
 
             Assert.NotEmpty(products);
 
@@ -73,7 +73,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact] // GetManyAsync(IEnumerable<(TKey1, TKey2)> keys, CancellationToken cancellationToken = default)
-        public override async Task GetManyAsync_If_Param_Is_Correct_Then_Ok()
+        public override async Task GetRangeAsync_Ok()
         {
             await AddTestingDataAsync();
 
@@ -84,7 +84,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
 
             IEnumerable<(long, string)> keys = [key1, key2];
 
-            var products = await repository.GetManyAsync(keys);
+            var products = await repository.GetRangeAsync(keys);
 
             Assert.NotEmpty(products);
 
@@ -104,7 +104,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
             IEnumerable<(long, string)> keys = [key1, key2];
 
             await Assert.ThrowsAsync<OperationCanceledException>(
-                () => repository.GetManyAsync(keys, cancellationToken: cancellationToken));
+                () => repository.GetRangeAsync(keys, cancellationToken: cancellationToken));
         }
 
         #endregion
