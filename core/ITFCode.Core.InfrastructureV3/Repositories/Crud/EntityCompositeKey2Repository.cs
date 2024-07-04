@@ -132,7 +132,7 @@ namespace ITFCode.Core.InfrastructureV3.Repositories.Crud
         {
             try
             {
-                await DbDeleter.DeleteAsync<TEntity>(key, shouldSave: false);
+                await DbDeleter.DeleteAsync<TEntity>(key, shouldSave: false, cancellationToken);
             }
             catch (Exception)
             {

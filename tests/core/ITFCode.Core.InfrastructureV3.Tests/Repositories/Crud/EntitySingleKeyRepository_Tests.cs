@@ -103,7 +103,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: Insert, InsertAsync, InsertRange & InsertRangeAsync
 
         [Fact] // Insert(TEntity entity)
-        public override void Insert_If_Param_Is_Correct_Then_Ok()
+        public override void Insert_Ok()
         {
             var user = DefaultData.UserAdmin;
 
@@ -125,7 +125,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact] // InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
-        public override async Task InsertAsync_If_Param_Is_Correct_Then_Ok()
+        public override async Task InsertAsync_Ok()
         {
             var user = DefaultData.UserAdmin;
 
@@ -158,7 +158,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact] // InsertRange(IEnumerable<TEntity> entities)
-        public override void InsertRange_If_Param_Is_Correct_Then_Ok()
+        public override void InsertRange_Ok()
         {
             var userAdmin = DefaultData.UserAdmin;
             var userManager = DefaultData.UserManager;
@@ -184,7 +184,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact] // InsertRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
-        public override async Task InsertRangeAsync_If_Param_Is_Correct_Then_Ok()
+        public override async Task InsertRangeAsync_Ok()
         {
             var userAdmin = DefaultData.UserAdmin;
             var userManager = DefaultData.UserManager;
@@ -578,7 +578,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: Delete, DeleteAsync, DeleteMany & DeleteManyAsync
 
         [Fact] // Delete(TKey key)
-        public override void Delete_By_Key_If_Param_Is_Correct_Then_Ok()
+        public override void Delete_By_Key_Ok()
         {
             AddTestingData();
 
@@ -598,7 +598,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact] // DeleteAsync(TKey key, CancellationToken cancellationToken = default)
-        public override async Task DeleteAsync_By_Key_If_Param_Is_Correct_Then_Ok()
+        public override async Task DeleteAsync_By_Key_Ok()
         {
             await AddTestingDataAsync();
 
@@ -631,7 +631,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
 
 
         [Fact] // Delete(TEntity entity)
-        public override void Delete_By_Entity_If_Param_Is_Correct_Then_Ok()
+        public override void Delete_By_Entity_Ok()
         {
             AddTestingData();
 
@@ -651,7 +651,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact] // DeleteAsync(TEntity entity, CancellationToken cancellationToken = default)
-        public override async Task DeleteAsync_By_Entity_If_Param_Is_Correct_Then_Ok()
+        public override async Task DeleteAsync_By_Entity_Ok()
         {
             await AddTestingDataAsync();
 
@@ -713,7 +713,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact] // DeleteRangeAsync(IEnumerable<TKey> keys, CancellationToken cancellationToken = default)
-        public override async Task DeleteRangeAsync_By_Keys_If_Param_Is_Correct_Then_Ok()
+        public override async Task DeleteRangeAsync_By_Keys_Ok()
         {
             await AddTestingDataAsync();
 
@@ -755,7 +755,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
 
 
         [Fact] // DeleteRange(IEnumerable<TEntity> entities)
-        public override void DeleteRange_By_Entities_If_Param_Is_Correct_Then_Ok()
+        public override void DeleteRange_By_Entities_Ok()
         {
             AddTestingData();
 
@@ -784,7 +784,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact] // DeleteRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
-        public override async Task DeleteRangeAsync_By_Entities_If_Param_Is_Correct_Then_Ok()
+        public override async Task DeleteRangeAsync_By_Entities_Ok()
         {
             await AddTestingDataAsync();
 

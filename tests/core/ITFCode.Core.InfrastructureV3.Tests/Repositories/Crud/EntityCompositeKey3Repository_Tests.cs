@@ -135,7 +135,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: Insert(TEntity entity)
 
         [Fact]
-        public override void Insert_If_Param_Is_Correct_Then_Ok()
+        public override void Insert_Ok()
         {
             var order = DefaultData.ProductOrder1;
 
@@ -160,7 +160,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
 
         [Fact]
-        public override async Task InsertAsync_If_Param_Is_Correct_Then_Ok()
+        public override async Task InsertAsync_Ok()
         {
             var order = DefaultData.ProductOrder1;
             var repository = CreateRepository();
@@ -195,7 +195,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: InsertRange(IEnumerable<TEntity> entities)
 
         [Fact]
-        public override void InsertRange_If_Param_Is_Correct_Then_Ok()
+        public override void InsertRange_Ok()
         {
             var order1 = DefaultData.ProductOrder1;
             var order2 = DefaultData.ProductOrder2;
@@ -225,7 +225,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: InsertRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
 
         [Fact]
-        public override async Task InsertRangeAsync_If_Param_Is_Correct_Then_Ok()
+        public override async Task InsertRangeAsync_Ok()
         {
             var order1 = DefaultData.ProductOrder1;
             var order2 = DefaultData.ProductOrder2;
@@ -516,7 +516,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: Delete((TKey1, TKey2, TKey3) key, bool shouldSave = false)
 
         [Fact]
-        public override void Delete_By_Key_If_Param_Is_Correct_Then_Ok()
+        public override void Delete_By_Key_Ok()
         {
             AddTestingData();
 
@@ -543,7 +543,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: DeleteAsync((TKey1, TKey2, TKey3) key, bool shouldSave = false, CancellationToken cancellationToken = default)
 
         [Fact]
-        public override async Task DeleteAsync_By_Key_If_Param_Is_Correct_Then_Ok()
+        public override async Task DeleteAsync_By_Key_Ok()
         {
             await AddTestingDataAsync();
 
@@ -615,7 +615,7 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         #region Tests: DeleteRangeAsync(IEnumerable<(TKey1, TKey2, TKey3)> keys, bool shouldSave = false, CancellationToken cancellationToken = default)
 
         [Fact]
-        public override async Task DeleteRangeAsync_By_Keys_If_Param_Is_Correct_Then_Ok()
+        public override async Task DeleteRangeAsync_By_Keys_Ok()
         {
             await AddTestingDataAsync();
 
@@ -699,25 +699,25 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
         }
 
         [Fact]
-        public override void Delete_By_Entity_If_Param_Is_Correct_Then_Ok()
+        public override void Delete_By_Entity_Ok()
         {
             throw new NotImplementedException();
         }
 
         [Fact]
-        public override Task DeleteAsync_By_Entity_If_Param_Is_Correct_Then_Ok()
+        public override Task DeleteAsync_By_Entity_Ok()
         {
             throw new NotImplementedException();
         }
 
         [Fact]
-        public override void DeleteRange_By_Entities_If_Param_Is_Correct_Then_Ok()
+        public override void DeleteRange_By_Entities_Ok()
         {
             throw new NotImplementedException();
         }
 
         [Fact]
-        public override Task DeleteRangeAsync_By_Entities_If_Param_Is_Correct_Then_Ok()
+        public override Task DeleteRangeAsync_By_Entities_Ok()
         {
             throw new NotImplementedException();
         }

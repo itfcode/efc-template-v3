@@ -12,12 +12,12 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
 
         #region Tests: Insert, InsertAsync, InsertRange & InsertRangeAsync
 
-        public abstract void Insert_If_Param_Is_Correct_Then_Ok();
-        public abstract Task InsertAsync_If_Param_Is_Correct_Then_Ok();
+        public abstract void Insert_Ok();
+        public abstract Task InsertAsync_Ok();
         public abstract Task InsertAsync_Throw_If_Cancellation();
 
-        public abstract void InsertRange_If_Param_Is_Correct_Then_Ok();       
-        public abstract Task InsertRangeAsync_If_Param_Is_Correct_Then_Ok();
+        public abstract void InsertRange_Ok();       
+        public abstract Task InsertRangeAsync_Ok();
         public abstract Task InsertRangeAsync_Throw_If_Cancellation();
 
         #endregion
@@ -44,20 +44,20 @@ namespace ITFCode.Core.InfrastructureV3.Tests.Repositories.Crud
 
         #region Tests: Delete, DeleteAsync, DeleteMany & DeleteManyAsync
 
-        public abstract void Delete_By_Key_If_Param_Is_Correct_Then_Ok();
-        public abstract Task DeleteAsync_By_Key_If_Param_Is_Correct_Then_Ok();
+        public abstract void Delete_By_Key_Ok();
+        public abstract Task DeleteAsync_By_Key_Ok();
         public abstract Task DeleteAsync_By_Key_Throw_If_Cancellation();
 
-        public abstract void Delete_By_Entity_If_Param_Is_Correct_Then_Ok();
-        public abstract Task DeleteAsync_By_Entity_If_Param_Is_Correct_Then_Ok();
+        public abstract void Delete_By_Entity_Ok();
+        public abstract Task DeleteAsync_By_Entity_Ok();
         public abstract Task DeleteAsync_By_Entity_Throw_If_Cancellation();
 
         public abstract void DeleteRange_By_Keys_If_Param_Is_Correct_Then_Ok();
-        public abstract Task DeleteRangeAsync_By_Keys_If_Param_Is_Correct_Then_Ok();
+        public abstract Task DeleteRangeAsync_By_Keys_Ok();
         public abstract Task DeleteRangeAsync_By_Keys_Throw_If_Cancellation();
 
-        public abstract void DeleteRange_By_Entities_If_Param_Is_Correct_Then_Ok();
-        public abstract Task DeleteRangeAsync_By_Entities_If_Param_Is_Correct_Then_Ok();
+        public abstract void DeleteRange_By_Entities_Ok();
+        public abstract Task DeleteRangeAsync_By_Entities_Ok();
         public abstract Task DeleteRangeAsync_By_Entities_Throw_If_Cancellation();
 
         #endregion
