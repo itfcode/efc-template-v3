@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ITFCode.Core.Data.Identity\ITFCode.Core.Data.Identity.csproj" />
+    <ProjectReference Include="..\ITFCode.Core.Domain.Identity\ITFCode.Core.Domain.Identity.csproj" />
+    <ProjectReference Include="..\ITFCode.Core.DTO.Identity\ITFCode.Core.DTO.Identity.csproj" />
+    <ProjectReference Include="..\ITFCode.Core.Services\ITFCode.Core.Services.csproj" />
+  </ItemGroup>
+
+</Project>
